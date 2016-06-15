@@ -1,0 +1,277 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>edu.tuc</groupId>
+  <artifactId>TaxiEinstiegStatistik</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <packaging>jar</packaging>
+
+  <!-- Voraussetzungen für die Mavenversion -->
+  <prerequisites>
+    <maven>3.0.0</maven>
+  </prerequisites>
+
+  <name>TaxiEinstiegStatistik</name>
+  <url>http://maven.apache.org</url>
+
+  <!-- die Properties definieren das Encoding f¨ur die Java - Quellcodes , zus ¨a tzlich
+  wird hier die zu verwendende Java Version festgelegt . Generell empfiehlt es
+  sich hier die neuste Version zu setzen
+  -->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!-- man kann mit diesen beiden Einstellungen festlegen , in welcher Java Version
+            die Quellcodes vorliegen und zu welcher Java Version sie ¨u bersetzt werden sollen ,
+            alle Java Versionen >= 1.2 sind " bin ¨ar kompatibel ", so dass die JRE class - Dateien ,
+            die in unterschiedlichen Versionen in einem Projekt vorliegen , ausf ¨u hren kann
+            -->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <!-- hier werden Abh¨a ngigkeiten f¨ur das Projekt hinterlegt , passende Pakete k¨o nnen unter http: // mvnrepository . com /
+          gesucht werden . Wichtig ist der Eintrag von " scope ", man setzt dar ¨uber , wann das Paket verwendet werden soll .
+          Soll das Paket im Programm verwendet werden , wird " compile " angegeben , wird es nur innerhalb der Maven - Tests
+          verwendet wird " test " angegeben (es gibt noch andere M¨o glichkeiten , aber im Rahmen dieser Lehrveranstaltung
+          ben ¨o tigt man diese nicht ). Bei " version " wird die zu verwendende Paket - Version gesetzt , hier kann zus ¨a tzlich mit []
+          bzw . () ein Versionsbereich fest gelegt werden (bei junit w¨are hier alles >= der Version 4.12 m¨o glich
+          -->
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>[4.12 ,)</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <!-- hier wird das Default - Goal festgelegt , d.h. welches Goal benutzt werden soll , wenn man Maven ohne Parameter ( also nur
+    " mvn ")
+    ausf ¨u hrt . Generell lohnt es sich " package " zu setzen ,
+    im Fall einer ausf ¨u hrbaren Jar , wird dann die Jar gebaut , die sich danach im target - Ordner
+    befindet . Zus ¨a tzlich wird Maven angewiesen die Abh ¨aängigkeiten online zu pr¨ufen , so dass am
+    Ende des Bauprozesses eine Liste mit Paketen angegeben wird , die aktualisiert wurden
+    -->
+    <defaultGoal>package versions:display-dependency-updates</defaultGoal>
+
+    <!-- der Resource - Ordner enth ¨alt alles , was nicht kompiliert werden muss , z.B. Bilddateien f¨ur die UI etc .,
+    mit diesem Eintrag werden dann die Daten entsprechend mit in das Jar aufgenommen und zus¨a tzlich werden
+    Propertydateien auf Bezeichner wie z.B. ${ artifactId } ¨u berpr ¨uft und diese k¨o nnen dann automatisch
+    durch die Werte aus der pom . xml ersetzt werden
+    -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <!-- in dieser Section werden alle Plugins hinterlegt , die f¨ur den Buildprozess notwendig sind -->
+    <plugins>
+
+      <!-- Compiler Einstellungen , die das Defaultverhalten ¨u berschreiben , so dass hier Warnings und Deprecations
+      angezeigt werden . Damit kann man w¨a hrend der Ausf ¨u hrung sehen , wo der Code nicht ordentlich geschrieben
+      wurde . Generell sollte man diese Einstellungen ernst nehmen und fixen
+      -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <compilerArgument>-Xlint:all</compilerArgument>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration >
+          <argLine>-Xmx3g</argLine >
+        </configuration >
+      </plugin >
+
+      <plugin>
+        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+        <artifactId>launch4j-maven-plugin</artifactId>
+        <version>1.7.8</version>
+        <executions>
+          <execution>
+            <id>native-windows</id>
+            <phase>install</phase>
+            <goals>
+              <goal >launch4j</goal>
+            </goals>
+            <configuration>
+              <!-- hier wird der Dateiname mit dazugehöriger Icon - Datei festgelegt , zusätzlich
+              wird die ( Download -) URL des Programms festgelegt
+              -->
+              <headerType>gui</headerType>
+              <outfile>target/${project.artifactId}-${project.version}.exe</outfile>
+              <errTitle>Java Runtime 64 Bit Download </errTitle >
+              <downloadUrl>http://www.java.com/en/download/manual.jsp</downloadUrl >
+              <supportUrl>${project.url}</supportUrl>
+              <icon>src/main/resources/icon.ico</icon>
+              <!-- Single - Instance definiert , dass das Programm nur einmal gestartet werden kann -->
+              <singleInstance >
+                <mutexName>${project.artifactId}</mutexName >
+                <windowTitle >${project.artifactId}</windowTitle >
+              </singleInstance >
+              <!-- dieser Eintrag legt die Parameter der Ausf ¨u hrung fest , JRE und Bit Version ,
+              sowie Parameter die der JRE zur Ausf ¨u hrung mitgegeben werden
+              -->
+              <jre >
+                <minVersion>1.8.0</minVersion>
+                <runtimeBits>64</runtimeBits>
+                <opts >
+                  <opt>-Xmx5g</opt>
+                  <opt>-XX:+UseParallelGC</opt>
+                </opts >
+              </jre >
+              <!-- Windows -Datei - Informationen , die angezeigt werden , wenn die Eigenschaften des
+              Executables angezeigt werden . Diese Eigenschaften m¨u ssen gesetzt werden
+              -->
+              <versionInfo >
+                <fileVersion>${project.version}.0.0 </fileVersion >
+                <txtFileVersion>${project.version}.0.0 </txtFileVersion >
+                <fileDescription></fileDescription >
+                <copyright >${project.organization.name}</copyright >
+                <productVersion >${project.version}.0.0</productVersion >
+                <txtProductVersion >${project.version}.0.0</txtProductVersion >
+                <productName >${project.artifactId}</productName >
+                <companyName >${project.organization.name}</companyName >
+                <internalName >${project.artifactId}-${project.version}.jar </internalName >
+                <originalFilename >${project.artifactId}-${project.version}.exe</originalFilename >
+              </versionInfo >
+            </configuration >
+          </execution >
+        </executions >
+      </plugin >
+
+
+      <!-- Clean ist ein Plugin , das speziell f¨ur das Goal " mvn clean " genutzt werden kann , um tempor ¨are Dateien zu l¨o schen .
+      Per Default
+      l¨o scht Maven den vollst ¨a ndigen " target " Ordner , je nach Bauprozess sind aber noch andere Dateien im Verzeichnis
+      vorhanden z.B. legt das
+      Shade - Plugin eine " dependency - reduced - pom .xml" an. Entsprechend ¨u ber den Eintrag " fileset " k¨o nnen Dateien
+      explizit zum L¨o schen eingeschlossen
+      oder ausgeschlossen werden
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>.</directory>
+              <includes>
+                <include>dependency-reduced-pom.xml</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+
+      <plugin >
+        <groupId >sh.tak.appbundler</groupId >
+        <artifactId >appbundle-maven-plugin </artifactId >
+        <version >1.0.4</version >
+        <configuration >
+          <!-- Parameter f¨ur die JRE bei der Ausf ¨u hrung -->
+          <jvmOptions >
+            <jvmOption >-Xmx5g</jvmOption >
+            <jvmOption >-XX:+UseParallelGC</jvmOption >
+          </jvmOptions >
+          <!-- Icon - Datei des Bundles und Datei - Name -->
+          <iconFile >icon.icns</iconFile >
+          <generateDiskImageFile >true</generateDiskImageFile >
+          <bundleName >${project.artifactId}-${project.version}</bundleName >
+          <!-- Klasse mit der " public static void main ( final String [] p_args )" Methode z.B. myproject . CMain -->
+          <mainClass>edu.tuc.bsvs.taxieinstiegstatistik.TaxiEinstiegStatistik</mainClass >
+        </configuration >
+        <executions >
+          <execution >
+            <id >native-darwin</id >
+            <phase >install</phase >
+            <goals >
+              <goal >bundle</goal >
+            </goals >
+          </execution >
+        </executions >
+      </plugin >
+
+      <!-- Doxygen kann mit Hilfe dieses Plugins direkt aus Maven heraus gestartet werden . Der Aufruf dazu lautet " mvn site "
+      . F¨ur
+      Doxygen wird im Ordner " src / main / documentation / configuration . doxyfile " die entsprechende Konfiguration abgelegt
+      die z.B. mit
+      Hilfe des Wizards generiert wurde . In der Doxygen - Konfiguration sollte man aus Ausgabeverzeichnis " target /
+      documentation " setzen ,
+      damit die erzeugte Dokumentation von Maven auch entsprechend entfernt werden kann
+      -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <id>doxygen</id>
+            <phase>site</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>doxygen</executable>
+              <arguments>
+                <argument>src/main/documentation/configuration.doxyfile</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
+      <!-- Shade - Plugin erzeugt eine ausf ¨u hrbare Datei mit allen Abh ¨a ngigkeiten , so dass die erzeugte Jar direkt
+      ausgef ¨u hrt werden kann . Dieses Plugin bietet eine Vielzahl an Einstellungen , f¨ur die einfache Verwendung
+      ist es ausreichend , dass hier in dem Goal " package " das Plugin ausgef ¨u hrt wird und bei "Main - Class " die
+      Klasse mit der main - Methode angegeben wird
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer
+                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <!-- hier muss die Klasse mit der " public static void main ( final String [] p_args )" mit
+                    vollst ¨a ndigen Namen (Paket - + Klassenname )
+                    angegeben werden z.B. myproject . CMain
+                    -->
+                    <Main-Class>edu.tuc.taxieinstiegstatistik.TaxiEinstiegStatistik</Main-Class>
+                  </manifestEntries>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>
