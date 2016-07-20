@@ -1,4 +1,4 @@
-package edu.tuc;
+package edu.tuc.taxieinstiegstatistik;
 
 /**
  * Hello world!
