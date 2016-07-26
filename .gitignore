@@ -1,1 +1,13 @@
-/target/
+// alles verbieten
+*.*
+
+// nun einzelne Dateien erlauben
+!.gitignore
+!pom.xml
+!*.md
+!*.png
+!*.java
+
+
+// zur Sicherheit den target-Ordner komplett ignorieren
+target/**
