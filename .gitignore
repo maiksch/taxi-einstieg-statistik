@@ -1,7 +1,7 @@
-// alles verbieten
+#alles verbieten
 *.*
 
-// nun einzelne Dateien erlauben
+#nun einzelne Dateien erlauben
 !.gitignore
 !pom.xml
 !*.md
@@ -9,5 +9,6 @@
 !*.java
 
 
-// zur Sicherheit den target-Ordner komplett ignorieren
+#zur Sicherheit den target-Ordner komplett ignorieren
 target/**
+target/

@@ -2,16 +2,14 @@
 package edu.tuc.taxieinstiegstatistik;
 
 /**
- * Hello world!
- *
+ * Einstiegspunkt in die Applikation
  */
-public class TaxiEinstiegStatistik  {
-    public static void main( String[] args ) {
-        System.out.println( "Hello World!" );
-        System.out.println( "Nasnas?" );
-        
+public class TaxiEinstiegStatistik {
+    public static void main(String[] args) {
+
+        // Starte den Jetti-Server der den Webservice bereit stellt
         App.server(args);
-        
+
     }
 }
 
