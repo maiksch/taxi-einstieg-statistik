@@ -8,36 +8,33 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 /**
  * Hello world!
- *
  */
-public class App
-{
-    public static void server( String[] args )
-    {
-        
+public class App {
+    public static void server(String[] args) {
 
-ResourceConfig config = new ResourceConfig();
- config.packages("taxieinstiegstatistik");
- ServletHolder servlet = new ServletHolder(new ServletContainer(config));
 
-Server server = new Server(8081);
- ServletContextHandler context = new ServletContextHandler(server, "/*");
- context.addServlet(servlet, "/*");
+        ResourceConfig config = new ResourceConfig();
+        config.packages("taxieinstiegstatistik");
+        ServletHolder servlet = new ServletHolder(new ServletContainer(config));
 
-try {
-     server.start();
-     try {
-		server.join();
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-} catch (Exception e1) {
-	// TODO Auto-generated catch block
-	e1.printStackTrace();
-} finally {
-     server.destroy();
- }
+        Server server = new Server(8081);
+        ServletContextHandler context = new ServletContextHandler(server, "/*");
+        context.addServlet(servlet, "/*");
+
+        try {
+            server.start();
+            try {
+                server.join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } finally {
+            server.destroy();
+        }
 
 
     }
