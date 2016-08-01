@@ -18,9 +18,9 @@ public class DatenbankAdapter {
 
     public DatenbankAdapter() {
 
-        loadConfig();
-
         if (conn == null) {
+            loadConfig();
+
             /*
             * Load the JDBC driver and establish a connection.
             */

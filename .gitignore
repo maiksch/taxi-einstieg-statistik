@@ -12,4 +12,3 @@
 #zur Sicherheit den target-Ordner komplett ignorieren
 target/**
 target/
-db.properties
