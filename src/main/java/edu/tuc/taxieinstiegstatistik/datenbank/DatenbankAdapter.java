@@ -1,5 +1,7 @@
 package edu.tuc.taxieinstiegstatistik.datenbank;
 
+import org.apache.commons.dbcp.BasicDataSource;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +10,8 @@ import java.util.Properties;
 
 public class DatenbankAdapter {
 
-    Connection conn = null;
+    private static DatenbankAdapter datenbankAdapter;
+    private BasicDataSource ds;
     private String port;
     private String host;
     private String db;
@@ -16,38 +19,42 @@ public class DatenbankAdapter {
     private String password;
     private String ssl;
 
+    /**
+     * Beispiel Query für die Datenbank in DatenbankAdapterTest.java
+     */
     public DatenbankAdapter() {
 
-        if (conn == null) {
-            loadConfig();
+        loadConfig();
+        ds = new BasicDataSource();
 
-            /*
-            * Load the JDBC driver and establish a connection.
-            */
-            try {
-                Class.forName("org.postgresql.Driver");
-            } catch (ClassNotFoundException e) {
-                System.out.println("PostgreSQL Treiber nicht gefunden");
-            }
+        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setUsername(user);
+        ds.setPassword(password);
+        ds.setUrl("jdbc:postgresql://" + host + ":" + port + "/" + db);
+        if (!ssl.isEmpty())
+            ds.setConnectionProperties("ssl=" + ssl + ";sslfactory=org.postgresql.ssl.NonValidatingFactory");
+        ds.setPoolPreparedStatements(true);
 
-            String url = "jdbc:postgresql://" + host + ":" + port + "/" + db;
-
-            Properties props = new Properties();
-            props.setProperty("user", user);
-            props.setProperty("password", password);
-            props.setProperty("ssl", ssl);
-            props.setProperty("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
-
-            try {
-                conn = DriverManager.getConnection(url, props);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        ds.setMinIdle(5);
+        ds.setMaxIdle(20);
+        ds.setMaxOpenPreparedStatements(180);
     }
 
     /**
-     * db.properties Datei muss im root-Ordner des Projekts sein (gibts bei Disco)
+     * Liefert eine Instanz der DatenbankAdapter Klasse
+     *
+     * @return
+     */
+    public static DatenbankAdapter getInstance() {
+        if (datenbankAdapter == null) {
+            datenbankAdapter = new DatenbankAdapter();
+        }
+
+        return datenbankAdapter;
+    }
+
+    /**
+     * db.properties Datei muss im Home-Verzeichnis des Betriebssystemnutzers liegen
      */
     private void loadConfig() {
 
@@ -55,7 +62,8 @@ public class DatenbankAdapter {
         InputStream input = null;
 
         try {
-            input = new FileInputStream("db.properties");
+            //input = new FileInputStream("db.properties");
+            input = new FileInputStream(new File(System.getProperty("user.home") + File.separator + "taxistatistik" + File.separator + "db.properties"));
 
             // load a properties file
             props.load(input);
@@ -81,12 +89,14 @@ public class DatenbankAdapter {
         }
     }
 
-    public Connection getConnection() {
-        return conn;
-    }
-
-    public void closeConnection() throws SQLException {
-        conn.close();
+    /**
+     * Liefert die Verbindung zur Datenbank aus dem Connection-Pool
+     *
+     * @return
+     * @throws SQLException
+     */
+    public Connection getConnection() throws SQLException {
+        return ds.getConnection();
     }
 
 
