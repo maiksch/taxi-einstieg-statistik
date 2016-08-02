@@ -1,36 +1,58 @@
 package edu.tuc.taxieinstiegstatistik.datenbank;
 
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 
 public class DatenbankAdapterTest {
 
     @Test
-    public void sequence() {
-        Statement s = null;
-        ResultSet r = null;
-        DatenbankAdapter dbAdapter = new DatenbankAdapter();
-        Connection conn = dbAdapter.getConnection();
+    public void testConnection() {
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        // Beispiel Query
+        String query = "select * from fcd_osm_1day WHERE assetid = ?";
 
         try {
-            s = conn.createStatement();
-            r = s.executeQuery("select * from fcd_osm_1day WHERE assetid = '1614556_1800649'");
+            // Statement vorbereiten
+            connection = DatenbankAdapter.getInstance().getConnection();
+            statement = connection.prepareStatement(query);
+            statement.setString(1, "1614556_1800649");
+            // Statement abschicken
+            resultSet = statement.executeQuery();
 
-            while (r.next())
-                System.out.println(r.getString("source_link"));
-
-            s.close();
-            dbAdapter.closeConnection();
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("source_link"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (resultSet != null) try {
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (statement != null) try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (connection != null) try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
+        Assert.assertTrue(resultSet != null);
+
     }
 
 
