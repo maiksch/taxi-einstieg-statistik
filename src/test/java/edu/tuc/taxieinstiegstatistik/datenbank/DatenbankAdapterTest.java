@@ -2,57 +2,28 @@ package edu.tuc.taxieinstiegstatistik.datenbank;
 
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.postgis.PGgeometry;
+import org.postgis.Point;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class DatenbankAdapterTest {
 
     @Test
-    public void testConnection() {
+    public void testCoordinateQuery() {
+        DatenbankAdapter datenbankAdapter = DatenbankAdapter.getInstance();
+        ArrayList<Point> objects = datenbankAdapter.getStartingPointCoordinatesFor1Day();
 
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+        for (Point p : objects)
+            System.out.println("SRID: " + p.getSrid() + ", X: " + p.getX() + ", Y: " + p.getY());
 
-        // Beispiel Query
-        String query = "select * from fcd_osm_1day WHERE assetid = ?";
-
-        try {
-            // Statement vorbereiten
-            connection = DatenbankAdapter.getInstance().getConnection();
-            statement = connection.prepareStatement(query);
-            statement.setString(1, "1614556_1800649");
-            // Statement abschicken
-            resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("source_link"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (resultSet != null) try {
-                resultSet.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            if (statement != null) try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            if (connection != null) try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Assert.assertTrue(resultSet != null);
-
+        Assert.assertTrue(!objects.isEmpty());
     }
 
 
