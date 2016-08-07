@@ -71,8 +71,8 @@ public class DatenbankAdapter {
         ResultSet resultSet = null;
         ArrayList<Point> result = new ArrayList<>();
 
-        // Query
-        String query = "select target_cand_geom from fcd_osm_1day WHERE source_candidate_nr = ?";
+        // Query der direkt die konvertierung von UTM zu LatLong vornimmt
+        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ?";
 
         try {
             // Statement vorbereiten
