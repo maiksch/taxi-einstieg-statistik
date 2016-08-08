@@ -1,4 +1,4 @@
-package edu.tuc.taxieinstiegstatistik;
+package edu.tuc.taxieinstiegstatistik.Jetty;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
