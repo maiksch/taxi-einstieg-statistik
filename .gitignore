@@ -9,6 +9,7 @@
 !*.java
 !web.xml
 !*.html
+!source.kml
 
 #zur Sicherheit den target-Ordner komplett ignorieren
 target/**
