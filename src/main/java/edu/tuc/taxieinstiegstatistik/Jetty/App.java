@@ -14,14 +14,15 @@ public class App {
 
 
         ResourceConfig config = new ResourceConfig();
-        config.packages("taxieinstiegstatistik");
+        config.packages("edu.tuc.taxieinstiegstatistik");
         ServletHolder servlet = new ServletHolder(new ServletContainer(config));
 
-        Server server = new Server(8081);
+        Server server = new Server(2222);
         ServletContextHandler context = new ServletContextHandler(server, "/*");
         context.addServlet(servlet, "/*");
 
         try {
+            context.start();
             server.start();
             try {
                 server.join();

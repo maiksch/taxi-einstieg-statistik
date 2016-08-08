@@ -16,7 +16,7 @@ public class DatenbankAdapterTest {
         ArrayList<Point> objects = datenbankAdapter.getStartingPointCoordinatesFor1Day();
 
         for (Point p : objects)
-            System.out.println("(" + p.getY() + ", " + p.getX() + ")");
+            System.out.println("(" + p.getX() + ", " + p.getY() + ")");
 
 
         Assert.assertTrue(!objects.isEmpty());

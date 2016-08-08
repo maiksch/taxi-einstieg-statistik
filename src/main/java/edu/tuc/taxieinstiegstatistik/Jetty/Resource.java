@@ -14,7 +14,7 @@ public class Resource {
 //	    return "Hello, world!";
 //		}	    
     @GET
-    @Path("param")
+    @Path("/param")
     @Produces(MediaType.TEXT_PLAIN)
     public String paramMethod(@QueryParam("name") String name) {
         return "Hello, " + name;
