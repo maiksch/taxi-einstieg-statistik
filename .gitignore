@@ -7,7 +7,8 @@
 !*.md
 !*.png
 !*.java
-
+!web.xml
+!*.html
 
 #zur Sicherheit den target-Ordner komplett ignorieren
 target/**

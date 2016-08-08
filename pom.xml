@@ -108,6 +108,7 @@
             <version>9.2.3.v20140905</version>
         </dependency>
 
+
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
@@ -167,6 +168,12 @@
 
         <!-- in dieser Section werden alle Plugins hinterlegt , die f¨ur den Buildprozess notwendig sind -->
         <plugins>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.11.v20160721</version>
+            </plugin>
 
             <!-- Compiler Einstellungen , die das Defaultverhalten ¨u berschreiben , so dass hier Warnings und Deprecations
             angezeigt werden . Damit kann man w¨a hrend der Ausf ¨u hrung sehen , wo der Code nicht ordentlich geschrieben
