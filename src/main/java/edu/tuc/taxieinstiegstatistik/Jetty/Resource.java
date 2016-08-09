@@ -7,25 +7,20 @@ import javax.ws.rs.core.MediaType;
 public class Resource {
 
 
-    //	  @GET
-//	  @Path("hello")
-//	  @Produces(MediaType.TEXT_PLAIN)
-//	  public String helloWorld() {
-//	    return "Hello, world!";
-//		}	    
-    @GET
-    @Path("/param")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String paramMethod(@QueryParam("name") String name) {
-        return "Hello, " + name;
-    }
-
-    @GET
-    @Path("path/{var}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String pathMethod(@PathParam("var") String name) {
-        return "Hello, " + name;
-    }
+	  @GET
+	  @Path("xml.kml")
+	  @Produces(MediaType.TEXT_PLAIN)
+	  public String helloWorld() {
+		  return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><kml xmlns=\"http://earth.google.com/kml/2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\"><Document><name>2012 Earthquakes, Magnitude 5</name><atom:author><atom:name>U.S. Geological Survey</atom:name></atom:author><atom:link href=\"http://earthquake.usgs.gov\"/><Folder><name>Magnitude 5</name><Placemark id=\"2012 Feb 9 18:52:48.39 UTC\"><name>2012 Feb 9 18:52:48.39 UTC</name><magnitude>45.0</magnitude><Point><coordinates>10.521111,52.269167,0</coordinates></Point></Placemark><Placemark id=\"2012 Feb 9 18:52:48.39 UTC\"><name>2012 Feb 9 18:52:48.39 UTC</name><magnitude>5.9</magnitude><Point><coordinates>10.521111,52.269167,0</coordinates></Point></Placemark></Folder>/Document></kml>";
+		    }	
+	  
+	  
+	    @GET
+	    @Path("path/{var}")
+	    @Produces(MediaType.TEXT_PLAIN)
+	    public String pathMethod(@PathParam("var") String name) {
+	        return "Hello, " + name;
+	}
 
 //	    @POST
 //	    @Path("post")
