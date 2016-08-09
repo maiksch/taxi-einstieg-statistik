@@ -114,25 +114,26 @@
             <version>9.2.3.v20140905</version>
         </dependency>
 
+        <!-- Ende Jetty -->
+
+        <!-- START JERSEY -->
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-server &ndash;&gt;-->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>2.7</version>
+            <version>2.23.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>2.7</version>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>2.23.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-jetty-http</artifactId>
-            <version>2.7</version>
-        </dependency>
+        <!-- ENDE JERSEY -->
 
-        <!-- Ende Jetty -->
     </dependencies>
 
     <repositories>
