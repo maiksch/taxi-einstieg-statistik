@@ -13,6 +13,7 @@ public class Document {
     private String x;
     private String y;
     private Date datum;
+    private Folder folder;
 
 
     public Document() {
@@ -51,4 +52,12 @@ public class Document {
     public void setDatum(Date datum) {
         this.datum = datum;
     }
+
+	public Folder getFolder() {
+		return folder;
+	}
+
+	public void setFolder(Folder folder) {
+		this.folder = folder;
+	}
 }

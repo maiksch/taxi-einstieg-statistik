@@ -25,26 +25,26 @@
 	  var blur = document.getElementById('blur');
       var radius = document.getElementById('radius');
 
-//      var vector = new ol.layer.Heatmap({
-//        source: new ol.source.Vector({
-//          url: 'source.kml',
-//          format: new ol.format.KML({
-//            extractStyles: false
-//          })
-//        }),
+      var vector = new ol.layer.Heatmap({
+        source: new ol.source.Vector({
+          url: 'source.kml',
+          format: new ol.format.KML({
+            extractStyles: false
+          })
+        }),
         blur: parseInt(blur.value, 10),
         radius: parseInt(radius.value, 10)
-//      });
+      });
 	  
 //GeoJSON statt xml
 
-			var vector = new ol.layer.Heatmap({
-                source: new ol.source.GeoJSON({
-                    url: 'GeoJ.json',
-                    projection: 'EPSG:3857'
-                }),
-                opacity: 0.9
-            });
+//			var vector = new ol.layer.Heatmap({
+//                source: new ol.source.GeoJSON({
+//                    url: 'GeoJ.json',
+//                    projection: 'EPSG:3857'
+//                }),
+//                opacity: 0.9
+//            });
 
       vector.getSource().on('addfeature', function(event) {
         // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
