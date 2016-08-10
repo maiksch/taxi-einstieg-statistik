@@ -4,7 +4,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.Date;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 /**
  * Created by Smadback on 09.08.2016.
@@ -42,14 +42,15 @@ public class DocumentService {
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public Document getEingstiegsPunkt() {
+//    @XmlElementWrapper(name="refs",  namespace="http://reference.com/ref")
+    public Document getDocument() {
 
-        Document dc = new Document();
-        Point point = new Point();
-        Placemark pl = new Placemark(point);
-        Folder fl = new Folder("Magnitude 5",pl);
-        dc.setFolder(fl);
- 
+    	Point point = new Point();
+    	Placemark pl = new Placemark(point);
+    	Folder fl = new Folder("Magnitude 5",pl);
+        Document dc = new Document(fl);        
+     //   dc.setFolder(fl);
+     //   kml kmltag = new kml(dc);
 
         return dc;
     }
