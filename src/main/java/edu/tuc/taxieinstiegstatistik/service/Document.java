@@ -7,56 +7,25 @@ import java.util.Date;
 /**
  * Created by Smadback on 09.08.2016.
  */
-@XmlRootElement
+@XmlRootElement(name="Document")
 public class Document {
 
-    private String x;
-    private String y;
-    private Date datum;
     private Folder folder;
 
 
     public Document() {
 
     }
+    
 
-    public Document(String x, String y, Date datum) {
-        this.x = x;
-        this.y = y;
-        this.datum = datum;
+    public Document(Folder fl) {
+        this.folder = fl;
     }
-
-    public String getX() {
-        return x;
-    }
-
-    @XmlElement
-    public void setX(String x) {
-        this.x = x;
-    }
-
-    public String getY() {
-        return y;
-    }
-
-    @XmlElement
-    public void setY(String y) {
-        this.y = y;
-    }
-
-    public Date getDatum() {
-        return datum;
-    }
-
-    @XmlElement
-    public void setDatum(Date datum) {
-        this.datum = datum;
-    }
-
+  
 	public Folder getFolder() {
 		return folder;
 	}
-
+@XmlElement(name="Folder")
 	public void setFolder(Folder folder) {
 		this.folder = folder;
 	}
