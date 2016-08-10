@@ -44,14 +44,15 @@ public class DocumentService {
     @Produces(MediaType.APPLICATION_XML)
     public Document getEingstiegsPunkt() {
 
-        Document dc = new Document();
-        Point point = new Point();
-        Placemark pl = new Placemark(point);
-        Folder fl = new Folder("Magnitude 5",pl);
-        dc.setFolder(fl);
- 
+        Document ep = new Document();
+        Folder fl = new Folder("Magnitude 5");
+ //       ep.setX("10.521111");
+ //       ep.setY("52.269167,0");
+ //       ep.setDatum(new Date());
+        ep.setFolder(fl);
+ //       fl.setname("Magnitude 5");
 
-        return dc;
+        return ep;
     }
 
 }
