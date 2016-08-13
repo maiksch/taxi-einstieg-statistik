@@ -2,12 +2,24 @@ package edu.tuc.taxieinstiegstatistik.service;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class kml {
+public class KML {
 	
 	public Document dc;
-
-	public kml(Document dc){
-		this.dc = dc;
+	
+	public KML(){
+		
 	}
 
+	public KML(Document dc){
+		this.dc = dc;
+	}
+	
+	public void setDocument(Document dc){
+		this.dc = dc;
+		
+	}
+	
+	public Document getDocument(){
+	return dc;
+	}
 }
