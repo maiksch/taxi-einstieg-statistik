@@ -71,8 +71,8 @@ public class DatenbankAdapter {
         ResultSet resultSet = null;
         ArrayList<Point> result = new ArrayList<>();
 
-        // Query der direkt die konvertierung von UTM zu LatLong vornimmt
-        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ?";
+        // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
+        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ? and source_time BETWEEN '12:00:00' and '13:00:00' ";
 
         try {
             // Statement vorbereiten
@@ -130,7 +130,7 @@ public class DatenbankAdapter {
             // load a properties file
             props.load(input);
 
-            // get the property value
+            // get the local property values
             port = props.getProperty("port");
             host = props.getProperty("host");
             db = props.getProperty("db");
