@@ -11,7 +11,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.dom.DOMResult;
+
 import java.util.ArrayList;
+import edu.tuc.taxieinstiegstatistik.datenbank.*;
+
 
 /**
  * Created by Smadback on 09.08.2016.
@@ -49,27 +52,24 @@ public class TaxiEinstiegStatistikService {
     @GET
     @Produces(MediaType.APPLICATION_XML)
     public KML getEinstiegStatistik() {
-
-        Point point = new Point();
-        point.setCoordinates("10.521111,52.269167,0");
-
-        Placemark placemark1 = new Placemark();
-        placemark1.setPoint(point);
-        placemark1.setName("2012 Feb 9 18:52:48.39 UTC");
-        placemark1.setMagnitude("45.0");
-
-        Point point2 = new Point();
-        point2.setCoordinates("10.521111,53.269167,0");
-
-        Placemark placemark2 = new Placemark();
-        placemark2.setPoint(point2);
-        placemark2.setName("2012 Feb 9 18:52:48.39 UTC");
-        placemark2.setMagnitude("45.0");
-
-        ArrayList<Placemark> placemarks = new ArrayList<>();
-        placemarks.add(placemark1);
-        placemarks.add(placemark2);
-
+    	
+//Provisorische Datenbankabfrage via DatenbankAdapter Klasse
+    	
+    	//Datenbank Abfrage
+    	DatenbankAdapter daba = DatenbankAdapter.getInstance();	
+    	ArrayList<org.postgis.Point> objects = daba.getStartingPointCoordinatesFor1Day();
+    	//Placemark Liste
+    	ArrayList<Placemark> placemarks = new ArrayList<>();
+    	//fuer jedes enthaltene Koordinaten Paar eine Point und Placemark Instanz
+    	for ( org.postgis.Point p : objects){
+   
+    		Point point = new Point();
+    		point.setCoordinates("" + p.getX() + "," + p.getY() + ",0");
+    		Placemark placemark = new Placemark();
+    		placemark.setPoint(point);
+    		placemarks.add(placemark);
+    	}
+    			  
         Folder folder = new Folder();
         folder.setName("Magnitude 5");
         folder.setPlacemarks(placemarks);
