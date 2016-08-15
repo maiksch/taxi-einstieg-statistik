@@ -25,18 +25,9 @@
 			  <label>Radiusgröße</label>
 			  <input id="radius" type="range" min="1" max="50" step="1" value="10"/>
 			  <label>Eintrübungsgröße</label>
-			  <input id="blur" type="range" min="1" max="50" step="1" value="15"/>	  
+			  <input id="blur" type="range" min="1" max="50" step="1" value="15"/>
 			</form>
-			
-			<form method="get" action="index.html">		
-				<label>AbZeit</label>
-				  <input id="ab" type="time" class="form-control" value="00:00:00"/>		
-				<label>BisZeit</label>
-				  <input id="bis" type="time" class="form-control" value="23:59:00"/>
-			<br />
-				<input type="submit" value="Neu Daten Laden" class="btn btn-success" onclick="setValues()">
-			
-			</form>
+		
 		</div>
 		
 		<hr>		
@@ -53,24 +44,12 @@
 		</div>
 	</div>
 	
-	
 	<script>
-function setValues() {
-		var ab = document.getElementById('ab');
-		var bis = document.getElementById('bis');
-
-		var url = '/rest/TaxiEinstiegStatistik/?ab=' + ab.value +'&bis=' + bis.value;
-		
-		return url;
-}
-</script>
-
-<script>
 	  var blur = document.getElementById('blur');
       var radius = document.getElementById('radius');
       var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-          url: setValues(),
+          url: '/rest/TaxiEinstiegStatistik',
           format: new ol.format.KML({
             extractStyles: false
           })
@@ -80,7 +59,6 @@ function setValues() {
       });
 	  
 //GeoJSON statt xml
-
 //			var vector = new ol.layer.Heatmap({
 //                source: new ol.source.GeoJSON({
 //                    url: 'GeoJ.json',
@@ -88,7 +66,6 @@ function setValues() {
 //                }),
 //                opacity: 0.9
 //            });
-
       vector.getSource().on('addfeature', function(event) {
         // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
         // standards-violating <magnitude> tag in each Placemark.  We extract it from
@@ -97,13 +74,11 @@ function setValues() {
         var magnitude = parseFloat(name.substr(2));
         event.feature.set('weight', magnitude - 5);
       });
-
       var raster = new ol.layer.Tile({
         source: new ol.source.OSM({
           layer: 'toner'
         })
       });
-
       var map = new ol.Map({
         layers: [raster, vector],
         target: 'map',
@@ -112,12 +87,9 @@ function setValues() {
           zoom: 12
         })
       });
-
-
       blur.addEventListener('input', function() {
         vector.setBlur(parseInt(blur.value, 10));
       });
-
       radius.addEventListener('input', function() {
         vector.setRadius(parseInt(radius.value, 10));
       });
