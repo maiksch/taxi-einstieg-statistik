@@ -4,13 +4,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.dom.DOMResult;
 import java.util.ArrayList;
 
 /**
@@ -50,6 +43,7 @@ public class TaxiEinstiegStatistikService {
     @Produces(MediaType.APPLICATION_XML)
     public KML getEinstiegStatistik() {
 
+        //test kommentar
         Point point = new Point();
         point.setCoordinates("10.521111,52.269167,0");
 
