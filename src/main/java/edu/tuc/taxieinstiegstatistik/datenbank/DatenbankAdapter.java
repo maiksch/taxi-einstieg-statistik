@@ -120,12 +120,12 @@ public class DatenbankAdapter {
      */
     private void loadConfig() {
 
-        Properties props = new Properties();
-        InputStream input = null;
+       final Properties props = new Properties();
 
-        try {
+
+        try (
             // property file needs to be located in the home directory of the system user under the "taxistatistik" folder
-            input = new FileInputStream(new File(System.getProperty("user.home") + File.separator + "taxistatistik" + File.separator + "db.properties"));
+          final FileInputStream input = new FileInputStream(new File(System.getProperty("user.home") + File.separator + "taxistatistik" + File.separator + "db.properties"))){
 
             // load a properties file
             props.load(input);
@@ -139,15 +139,9 @@ public class DatenbankAdapter {
             ssl = props.getProperty("ssl");
 
         } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            
+        	ex.printStackTrace();
+   
         }
     }
 
