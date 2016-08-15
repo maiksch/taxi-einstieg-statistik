@@ -25,9 +25,18 @@
 			  <label>Radiusgröße</label>
 			  <input id="radius" type="range" min="1" max="50" step="1" value="10"/>
 			  <label>Eintrübungsgröße</label>
-			  <input id="blur" type="range" min="1" max="50" step="1" value="15"/>
+			  <input id="blur" type="range" min="1" max="50" step="1" value="15"/>	  
 			</form>
-		
+			
+			<form method="get" action="index.html">		
+				<label>AbZeit</label>
+				  <input id="ab" type="time" class="form-control" value="00:00:00"/>		
+				<label>BisZeit</label>
+				  <input id="bis" type="time" class="form-control" value="23:59:00"/>
+			<br />
+				<input type="submit" value="Neu Daten Laden" class="btn btn-success" onclick="setValues()">
+			
+			</form>
 		</div>
 		
 		<hr>		
@@ -44,13 +53,24 @@
 		</div>
 	</div>
 	
+	
 	<script>
+function setValues() {
+		var ab = document.getElementById('ab');
+		var bis = document.getElementById('bis');
+
+		var url = '/rest/TaxiEinstiegStatistik/?ab=' + ab.value +'&bis=' + bis.value;
+		
+		return url;
+}
+</script>
+
+<script>
 	  var blur = document.getElementById('blur');
       var radius = document.getElementById('radius');
-
       var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-          url: '/rest/TaxiEinstiegStatistik',
+          url: setValues(),
           format: new ol.format.KML({
             extractStyles: false
           })
