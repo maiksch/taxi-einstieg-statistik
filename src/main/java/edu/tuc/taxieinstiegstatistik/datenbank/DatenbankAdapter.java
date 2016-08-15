@@ -72,7 +72,7 @@ public class DatenbankAdapter {
         ArrayList<Point> result = new ArrayList<>();
 
         // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
-        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ? and source_time BETWEEN '12:00:00' and '13:00:00' ";
+        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ? and source_time between '2014-10-07 12:00:00' and '2014-10-07 13:00:00' ";
 
         try {
             // Statement vorbereiten
