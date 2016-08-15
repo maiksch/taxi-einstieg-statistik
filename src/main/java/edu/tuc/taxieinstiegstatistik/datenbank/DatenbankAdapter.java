@@ -8,17 +8,18 @@ import org.postgis.Point;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
 public class DatenbankAdapter {
 
-    private static DatenbankAdapter datenbankAdapter;
+    /**
+     * Singleton Instanz, die nur einmal vorhanden ist
+     */
+    private static final DatenbankAdapter INSTANCE = new DatenbankAdapter();
+
+    private boolean isConfigLoaded;
     private BasicDataSource ds;
     private String port;
     private String host;
@@ -32,21 +33,24 @@ public class DatenbankAdapter {
      */
     private DatenbankAdapter() {
 
-        loadConfig();
-        ds = new BasicDataSource();
+        isConfigLoaded = loadConfig();
 
-        ds.setDriverClassName("org.postgresql.Driver");
-        ds.setUsername(user);
-        ds.setPassword(password);
-        ds.setUrl("jdbc:postgresql://" + host + ":" + port + "/" + db);
-        if (!ssl.isEmpty())
-            ds.setConnectionProperties("ssl=" + ssl + ";sslfactory=org.postgresql.ssl.NonValidatingFactory");
-        ds.setPoolPreparedStatements(true);
-        ds.setAccessToUnderlyingConnectionAllowed(true);
+        if (isConfigLoaded) {
+            ds = new BasicDataSource();
 
-        ds.setMinIdle(5);
-        ds.setMaxIdle(20);
-        ds.setMaxOpenPreparedStatements(180);
+            ds.setDriverClassName("org.postgresql.Driver");
+            ds.setUsername(user);
+            ds.setPassword(password);
+            ds.setUrl("jdbc:postgresql://" + host + ":" + port + "/" + db);
+            if (!ssl.isEmpty())
+                ds.setConnectionProperties("ssl=" + ssl + ";sslfactory=org.postgresql.ssl.NonValidatingFactory");
+            ds.setPoolPreparedStatements(true);
+            ds.setAccessToUnderlyingConnectionAllowed(true);
+
+            ds.setMinIdle(5);
+            ds.setMaxIdle(20);
+            ds.setMaxOpenPreparedStatements(180);
+        }
     }
 
     /**
@@ -55,11 +59,7 @@ public class DatenbankAdapter {
      * @return
      */
     public static DatenbankAdapter getInstance() {
-        if (datenbankAdapter == null) {
-            datenbankAdapter = new DatenbankAdapter();
-        }
-
-        return datenbankAdapter;
+        return INSTANCE;
     }
 
     /**
@@ -72,13 +72,17 @@ public class DatenbankAdapter {
         ArrayList<Point> result = new ArrayList<>();
 
         // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
-        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ? and source_time between '2014-10-07 12:00:00' and '2014-10-07 13:00:00' ";
+        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ? and source_time between ? and ? ";
 
         try {
             // Statement vorbereiten
             connection = DatenbankAdapter.getInstance().getConnection();
             statement = connection.prepareStatement(query);
-            statement.setInt(1, 1);
+            statement.setInt(1, 1); // source_candiddate_nr = 1, weil dies immer dem Einstieg der Taxifahrt entspricht
+            statement.setTimestamp(2, Timestamp.valueOf("2014-10-07 12:00:00")); // hole alle daten von
+            statement.setTimestamp(3, Timestamp.valueOf("2014-10-07 13:00:00")); // hole alle daten bis
+
+
             // Statement abschicken
             resultSet = statement.executeQuery();
 
@@ -118,14 +122,13 @@ public class DatenbankAdapter {
     /**
      * db.properties Datei muss im Home-Verzeichnis des Betriebssystemnutzers liegen
      */
-    private void loadConfig() {
+    private boolean loadConfig() {
 
-       final Properties props = new Properties();
-
+        final Properties props = new Properties();
 
         try (
-            // property file needs to be located in the home directory of the system user under the "taxistatistik" folder
-          final FileInputStream input = new FileInputStream(new File(System.getProperty("user.home") + File.separator + "taxistatistik" + File.separator + "db.properties"))){
+                // property file needs to be located in the home directory of the system user under the "taxistatistik" folder
+                final FileInputStream input = new FileInputStream(new File(System.getProperty("user.home") + File.separator + "taxistatistik" + File.separator + "db.properties"))) {
 
             // load a properties file
             props.load(input);
@@ -139,10 +142,13 @@ public class DatenbankAdapter {
             ssl = props.getProperty("ssl");
 
         } catch (IOException ex) {
-            
-        	ex.printStackTrace();
-   
+
+            ex.printStackTrace();
+            return false;
+
         }
+
+        return true;
     }
 
     /**
