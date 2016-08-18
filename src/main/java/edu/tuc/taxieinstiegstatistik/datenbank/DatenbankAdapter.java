@@ -65,7 +65,7 @@ public class DatenbankAdapter {
     /**
      * @return
      */
-    public ArrayList<Point> getStartingPointCoordinatesFor1Day() {
+    public ArrayList<Point> getStartingPointCoordinates(String ab, String bis) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -79,8 +79,8 @@ public class DatenbankAdapter {
             connection = DatenbankAdapter.getInstance().getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, 1); // source_candiddate_nr = 1, weil dies immer dem Einstieg der Taxifahrt entspricht
-            statement.setTimestamp(2, Timestamp.valueOf("2014-10-07 12:00:00")); // hole alle daten von
-            statement.setTimestamp(3, Timestamp.valueOf("2014-10-07 13:00:00")); // hole alle daten bis
+            statement.setTimestamp(2, Timestamp.valueOf("2014-10-07 " + ab)); // hole alle daten von
+            statement.setTimestamp(3, Timestamp.valueOf("2014-10-07 " + bis)); // hole alle daten bis
 
 
             // Statement abschicken

@@ -1,8 +1,8 @@
 package edu.tuc.taxieinstiegstatistik.service;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import edu.tuc.taxieinstiegstatistik.datenbank.DatenbankAdapter;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
@@ -41,28 +41,23 @@ public class TaxiEinstiegStatistikService {
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public KML getEinstiegStatistik() {
+    public KML getEinstiegStatistik(@DefaultValue("00:00:00") @QueryParam("ab") String ab,
+                                    @DefaultValue("24:00:00") @QueryParam("bis") String bis) {
 
-        // toller test kommentar
-        Point point = new Point();
-        point.setCoordinates("10.521111,52.269167,0");
 
-        Placemark placemark1 = new Placemark();
-        placemark1.setPoint(point);
-        placemark1.setName("2012 Feb 9 18:52:48.39 UTC");
-        placemark1.setMagnitude("45.0");
-
-        Point point2 = new Point();
-        point2.setCoordinates("10.521111,53.269167,0");
-
-        Placemark placemark2 = new Placemark();
-        placemark2.setPoint(point2);
-        placemark2.setName("2012 Feb 9 18:52:48.39 UTC");
-        placemark2.setMagnitude("45.0");
-
+        //Datenbank Abfrage
+        DatenbankAdapter daba = DatenbankAdapter.getInstance();
+        ArrayList<org.postgis.Point> objects = daba.getStartingPointCoordinates(ab, bis);
+        //Placemark Liste
         ArrayList<Placemark> placemarks = new ArrayList<>();
-        placemarks.add(placemark1);
-        placemarks.add(placemark2);
+        //fuer jedes enthaltene Koordinaten Paar eine Point und Placemark Instanz
+        for (org.postgis.Point p : objects) {
+            Point point = new Point();
+            point.setCoordinates("" + p.getX() + "," + p.getY() + ",0");
+            Placemark placemark = new Placemark();
+            placemark.setPoint(point);
+            placemarks.add(placemark);
+        }
 
         Folder folder = new Folder();
         folder.setName("Magnitude 5");
@@ -74,35 +69,9 @@ public class TaxiEinstiegStatistikService {
         KML kml = new KML();
         kml.setDocument(document);
 
-        return kml;
-    }
+        System.out.println(ab + " " + bis);
 
-    @GET
-    @Path("/temp")
-    @Produces(MediaType.APPLICATION_XML)
-    public String getTemp() {
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<KML xmlns=\"http://earth.google.com/kml/2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" +
-                "    <Document>\n" +
-                "        <Folder>\n" +
-                "            <name>Magnitude 5</name>\n" +
-                "            <Placemark id=\"2012 Feb 9 18:52:48.39 UTC\">\n" +
-                "                <name>2012 Feb 9 18:52:48.39 UTC</name>\n" +
-                "                <magnitude>45.0</magnitude>\n" +
-                "                <Point>\n" +
-                "                    <coordinates>10.521111,52.269167,0</coordinates>\n" +
-                "                </Point>\n" +
-                "            </Placemark>\n" +
-                "            <Placemark id=\"2012 Feb 9 18:52:48.39 UTC\">\n" +
-                "                <name>2012 Feb 9 18:52:48.39 UTC</name>\n" +
-                "                <magnitude>5.9</magnitude>\n" +
-                "                <Point>\n" +
-                "                    <coordinates>10.521111,52.269167,0</coordinates>\n" +
-                "                </Point>\n" +
-                "            </Placemark>\n" +
-                "        </Folder>\n" +
-                "    </Document>\n" +
-                " </KML>";
+        return kml;
     }
 
 }
