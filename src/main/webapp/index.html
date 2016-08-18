@@ -57,22 +57,20 @@
 	
 	
 	<script>
-function setValues() {
-		var ab = document.getElementById('ab');
-		var bis = document.getElementById('bis');
+		var QueryString = function () {
+	  // This function is anonymous, is executed immediately and 
+	  // the return value is assigned to QueryString!
+	  var query_string = {};
+	  var query = window.location.search.substring(1);
+	 
+	  return "http://localhost:8080/rest/TaxiEinstiegStatistik?"+query;
+	}();
 
-		var url = '/rest/TaxiEinstiegStatistik/?ab=' + ab.value +'&bis=' + bis.value;
-		
-		return url;
-}
-</script>
-
-<script>
 	  var blur = document.getElementById('blur');
       var radius = document.getElementById('radius');
       var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-          url: setValues(),
+          url: QueryString,
           format: new ol.format.KML({
             extractStyles: false
           })
@@ -82,7 +80,6 @@ function setValues() {
       });
 	  
 //GeoJSON statt xml
-
 //			var vector = new ol.layer.Heatmap({
 //                source: new ol.source.GeoJSON({
 //                    url: 'GeoJ.json',
@@ -90,7 +87,6 @@ function setValues() {
 //                }),
 //                opacity: 0.9
 //            });
-
       vector.getSource().on('addfeature', function(event) {
         // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
         // standards-violating <magnitude> tag in each Placemark.  We extract it from
@@ -99,13 +95,11 @@ function setValues() {
         var magnitude = parseFloat(name.substr(2));
         event.feature.set('weight', magnitude - 5);
       });
-
       var raster = new ol.layer.Tile({
         source: new ol.source.OSM({
           layer: 'toner'
         })
       });
-
       var map = new ol.Map({
         layers: [raster, vector],
         target: 'map',
@@ -114,12 +108,9 @@ function setValues() {
           zoom: 12
         })
       });
-
-
       blur.addEventListener('input', function() {
         vector.setBlur(parseInt(blur.value, 10));
       });
-
       radius.addEventListener('input', function() {
         vector.setRadius(parseInt(radius.value, 10));
       });
