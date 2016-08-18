@@ -28,13 +28,13 @@
 			  <input id="blur" type="range" min="1" max="50" step="1" value="15"/>	  
 			</form>
 			
-			<form method="get" action="index.html">		
+			<form method="get" action="/">		
 				<label>AbZeit</label>
-				  <input id="ab" type="time" class="form-control" value="00:00:00"/>		
+				  <input id="ab" name="ab" type="time" class="form-control" value="00:00:00"/>		
 				<label>BisZeit</label>
-				  <input id="bis" type="time" class="form-control" value="23:59:00"/>
+				  <input id="bis" name="bis" type="time" class="form-control" value="23:59:00"/>
 			<br />
-				<input type="submit" value="Neu Daten Laden" class="btn btn-success" onclick="setValues()">
+				<input type="submit" value="Neu Daten Laden" class="btn btn-success">
 			
 			</form>
 		</div>
