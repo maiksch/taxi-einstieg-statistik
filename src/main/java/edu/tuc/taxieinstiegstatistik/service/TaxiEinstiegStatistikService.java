@@ -5,8 +5,6 @@ import edu.tuc.taxieinstiegstatistik.datenbank.DatenbankAdapter;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import edu.tuc.taxieinstiegstatistik.datenbank.*;
-
 
 /**
  * Created by Smadback on 09.08.2016.

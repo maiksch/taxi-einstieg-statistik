@@ -1,7 +1,6 @@
 package edu.tuc.taxieinstiegstatistik.service;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by Smadback on 09.08.2016.
