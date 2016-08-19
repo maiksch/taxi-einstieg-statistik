@@ -25,14 +25,25 @@
 			  <label>Radiusgröße</label>
 			  <input id="radius" type="range" min="1" max="50" step="1" value="10"/>
 			  <label>Eintrübungsgröße</label>
-			  <input id="blur" type="range" min="1" max="50" step="1" value="15"/>
+			  <input id="blur" type="range" min="1" max="50" step="1" value="15"/>	  
 			</form>
-		
+			
+			<form method="get" action="/">		
+				<label>AbZeit</label>
+				  <input id="ab" name="ab" type="time" class="form-control" value="00:00:00"/>		
+				<label>BisZeit</label>
+				  <input id="bis" name="bis" type="time" class="form-control" value="23:59:00"/>
+			<br />
+				<input type="submit" value="Neu Daten Laden" class="btn btn-success">
+			
+			</form>
 		</div>
+		
 		
 		<hr>		
 		
-		<div>
+		
+		<div> 
 			<div class="col-sm-4"><img src="https://www.tu-clausthal.de/cd/logo/Logo_TUC_de_Web.gif" class="img-responsive"><br />&#160;</div>
 			<div class="col-sm-8">
 			
@@ -44,12 +55,39 @@
 		</div>
 	</div>
 	
+	
 	<script>
+		var QueryString = function () {
+	  // This function is anonymous, is executed immediately and 
+	  // the return value is assigned to QueryString!
+	  var query_string = {};
+	  var query = window.location.search.substring(1);
+	  var vars = query.split("&");
+	  for (var i=0;i<vars.length;i++) {
+		var pair = vars[i].split("=");
+			// If first entry with this name
+		if (typeof query_string[pair[0]] === "undefined") {
+		  query_string[pair[0]] = decodeURIComponent(pair[1]);
+			// If second entry with this name
+		} else if (typeof query_string[pair[0]] === "string") {
+		  var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+		  query_string[pair[0]] = arr;
+			// If third or later entry with this name
+		} else {
+		  query_string[pair[0]].push(decodeURIComponent(pair[1]));
+		}
+	  } 
+	      document.getElementById("ab").value = query_string.ab;
+	      document.getElementById("bis").value = query_string.bis;
+	 
+	  return "http://localhost:8080/rest/TaxiEinstiegStatistik?"+query;
+	}();
+
 	  var blur = document.getElementById('blur');
       var radius = document.getElementById('radius');
       var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-          url: '/rest/TaxiEinstiegStatistik',
+          url: QueryString,
           format: new ol.format.KML({
             extractStyles: false
           })
