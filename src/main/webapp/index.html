@@ -72,9 +72,9 @@
 		dates_bis = document.getElementById("bis").value.split(":");
 		
 		
-		var date1 = new Date (2000,1,1,dates_ab[0],dates_ab[1],dates_ab[2]);
+		var date1 = new Date (2014,10,7,dates_ab[0],dates_ab[1],dates_ab[2]);
 		document.getElementById("bis").value = date1.getHours()+":"+date1.getMinutes()+":"+date1.getSeconds();
-		var date2 = new Date (2000,1,1,dates_bis[0],dates_bis[1],dates_bis[2]);
+		var date2 = new Date (2014,10,7,dates_bis[0],dates_bis[1],dates_bis[2]);
 		document.getElementById("bis").value = date2.getHours()+":"+date2.getMinutes()+":"+date2.getSeconds();
 		
 		if(date1.getTime() > date2.getTime()) {
