@@ -10,7 +10,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 public class DatenbankAdapter {
 
@@ -140,6 +142,15 @@ public class DatenbankAdapter {
             user = props.getProperty("usr");
             password = props.getProperty("pw");
             ssl = props.getProperty("ssl");
+          
+             // findet die db.properties nicht, muss im classpath sein?
+//            ResourceBundle myResources = ResourceBundle.getBundle("user.home.taxistatistik.db");
+//            Enumeration <String> keys = myResources.getKeys();
+//            while(keys.hasMoreElements()) {
+//         	   String key = keys.nextElement();
+//         	   String value = myResources.getString(key);
+//         	   System.out.println(key + ":" + value);
+//            }
 
         } catch (IOException ex) {
 
