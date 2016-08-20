@@ -8,10 +8,6 @@ public class Folder {
     private String name;
     private ArrayList<Placemark> placemarks;
 
-    public String getname() {
-        return name;
-    }
-
     public String getName() {
         return name;
     }
