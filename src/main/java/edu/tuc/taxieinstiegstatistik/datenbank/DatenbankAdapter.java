@@ -72,12 +72,13 @@ public class DatenbankAdapter {
     /**
      * @return
      */
-    public ArrayList<SimpleEntry<Point, Timestamp>> getStartingPointCoordinates(String ab, String bis) {
+//      public ArrayList<SimpleEntry<Point, Timestamp>> getStartingPointCoordinates(String ab, String bis) {
+        public ArrayList<Point> getStartingPointCoordinates(String ab, String bis) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-//        ArrayList<Point> result = new ArrayList<>();
-        ArrayList<AbstractMap.SimpleEntry<Point, Timestamp>> liste = new ArrayList<AbstractMap.SimpleEntry<Point,Timestamp>>();
+        ArrayList<Point> result = new ArrayList<>();
+//      ArrayList<AbstractMap.SimpleEntry<Point, Timestamp>> liste = new ArrayList<AbstractMap.SimpleEntry<Point,Timestamp>>();
 
         // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
         String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ? and source_time between ? and ? ";
@@ -103,8 +104,10 @@ public class DatenbankAdapter {
             ((org.postgresql.PGConnection) connection).addDataType("geometry", Class.forName("org.postgis.PGgeometry"));
 
             while (resultSet.next()) {
-                Entry<Point, Timestamp> geom = (Entry<Point, Timestamp>) ((PGgeometry) resultSet.getObject(1)).getGeometry();
-                liste.addAll((Collection<? extends SimpleEntry<Point, Timestamp>>) geom);
+//                Entry<Point, Timestamp> geom = (Entry<Point, Timestamp>) ((PGgeometry) resultSet.getObject(1)).getGeometry();
+//                liste.addAll((Collection<? extends SimpleEntry<Point, Timestamp>>) geom);
+                  Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
+                  result.add(geom);
             }
 
         } catch (SQLException e) {
@@ -124,7 +127,8 @@ public class DatenbankAdapter {
             }
         }
 
-        return liste;
+//      return liste;
+        return result;
     }
 
     /**
