@@ -4,20 +4,29 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbcp.DelegatingConnection;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
-
+import javafx.util.*;
+import java.lang.Object;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.*;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.ResourceBundle;
+
+
 
 public class DatenbankAdapter {
 
@@ -72,15 +81,18 @@ public class DatenbankAdapter {
     /**
      * @return
      */
-    public ArrayList<SimpleEntry<Point, Timestamp>> getStartingPointCoordinates(String ab, String bis) {
+    public List<Pair<Point,Date>> getStartingPointCoordinates(String ab, String bis) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-//        ArrayList<Point> result = new ArrayList<>();
-        ArrayList<AbstractMap.SimpleEntry<Point, Timestamp>> liste = new ArrayList<AbstractMap.SimpleEntry<Point,Timestamp>>();
-
+        List<Pair<Point,Date>> list = new ArrayList<>();
+        
+        
         // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
-        String query = "select ST_Transform(target_cand_geom, 4326) as geom from fcd_osm_1day WHERE source_candidate_nr = ? and source_time between ? and ? ";
+        String query = "SELECT ST_Transform(target_cand_geom, 4326) AS geom,"
+                     + "source_time"
+                     + "FROM fcd_osm_1day"
+                     + "WHERE source_candidate_nr = ? AND source_time BETWEEN ? and ? ";
 
         try {
             // Statement vorbereiten
@@ -101,11 +113,21 @@ public class DatenbankAdapter {
             */
             connection = ((DelegatingConnection) connection).getInnermostDelegate();
             ((org.postgresql.PGConnection) connection).addDataType("geometry", Class.forName("org.postgis.PGgeometry"));
+            
 
-            while (resultSet.next()) {
-                Entry<Point, Timestamp> geom = (Entry<Point, Timestamp>) ((PGgeometry) resultSet.getObject(1)).getGeometry();
-                liste.addAll((Collection<? extends SimpleEntry<Point, Timestamp>>) geom);
-            }
+            
+            Timestamp t = resultSet.getTimestamp(query);
+            Date date = new Date(t.getTime());
+            Point geom = new Point(geom.getY() + geom.getX(), 0);
+            list.add(new AbstractMap.SimpleEntry(geom,date));
+
+         
+            
+//            while (resultSet.next()) {
+//                Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
+//                list.add(geom);
+//            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -124,7 +146,7 @@ public class DatenbankAdapter {
             }
         }
 
-        return liste;
+        return list;
     }
 
     /**

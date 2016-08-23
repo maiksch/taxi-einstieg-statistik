@@ -4,22 +4,26 @@ package edu.tuc.taxieinstiegstatistik.datenbank;
 import org.junit.Assert;
 import org.junit.Test;
 import org.postgis.Point;
-
+import javafx.util.*;
+import java.util.Date;
 import java.sql.Timestamp;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 
-public class DatenbankAdapterTest {
+public class DatenbankAdapterTest{
 
     @Test
-    public void testCoordinateQuery() {
+    public void testCoordinateQuery()  {
         DatenbankAdapter datenbankAdapter = DatenbankAdapter.getInstance();
-        ArrayList<SimpleEntry<Point,Timestamp>> objects = datenbankAdapter.getStartingPointCoordinates("00:00:00", "24:00:00");
+        List<Pair<Point,Date>> objects = datenbankAdapter.getStartingPointCoordinates("00:00:00", "24:00:00");
 
-        for (Entry<Point, Timestamp> p : objects)
-            System.out.println("(" + p.getKey() + ", " + p.getKey() + ")");
+        
+        
+        for (Pair<Point, java.util.Date> list : objects)
+            System.out.println(list.getKey() + ", " + list.getValue());
 
 
         Assert.assertTrue(!objects.isEmpty());
