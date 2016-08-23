@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLTestCase;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-import org.xmlunit.builder.DiffBuilder;
+
 public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 	/**
 	 * Test Klasse TaxiEinstiegStatistikService
@@ -28,36 +26,20 @@ public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 	
 	@Test
 	public void testXMLContent() throws IOException, SAXException {
-		
-		String myControlXML = "</coordinates>";
-		String inputLine;
-        String myTestXML = new String();
-		
+		//Test auf XML- Inhalt: wenn Tag </coordinates> enthalten dann xml valide 
+		String myControlXML = "</coordinates>"; //Referenz Tag
+		String inputLine;	//input via URL
+        String myTestXML = new String();	//fertiges xml als String
+		//Abruf vom jetty server via rest
 		URL url = new URL("http://localhost:8080/rest/TaxiEinstiegStatistik");	
         BufferedReader in = new BufferedReader(
         new InputStreamReader(url.openStream()));
-
+        //zuweisen des vom jetty erhaltenen xml
         while ((inputLine = in.readLine()) != null)
             myTestXML += inputLine;
         in.close();
-		
-	//	System.out.println("alt: " +myControlXML);
-	//	System.out.println("neu: " +myTestXML);
-		
-        XMLUnit.setIgnoreWhitespace(true);
-        XMLUnit.setIgnoreComments(true);
-        XMLUnit.setIgnoreDiffBetweenTextAndCDATA(true);
-        
-        Diff myDiff = DiffBuilder.compare(myControlXML).withTest(myTestXML)
-                .checkForSimilar() // a different order is always 'similar' not equals.
-                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText))
-                .build();
-
-        Assert.assertFalse("XML similar " + myDiff.toString(), myDiff.hasDifferences());
-        
-		//	assertXMLEqual("Vergleiche XML Struktur",myControlXML, myTestXML);
-		//	assertNodeTest
-		//	XMLTestCase.assertEquals(myControlXML, myTestXML);
-		//	XMLTestCase.assertSame(myControlXML, myTestXML);
+        //Test ob Tag enthalten
+        boolean test = myTestXML.contains(myControlXML);  
+        Assert.assertTrue(test);       
 	}
 }
