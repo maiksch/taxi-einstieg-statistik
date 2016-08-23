@@ -1,11 +1,17 @@
 package edu.tuc.taxieinstiegstatistik.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
+import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-
+import org.xmlunit.builder.DiffBuilder;
 public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 	/**
 	 * Test Klasse TaxiEinstiegStatistikService
@@ -15,21 +21,43 @@ public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 
 	@Test
 	public void testGetEinstiegStatistik() {
-		TaxiEinstiegStatistikService testTESS = new TaxiEinstiegStatistikService();
-		KML testKML = new KML();
-		testKML = testTESS.getEinstiegStatistik("00:00:00", "24:00:00");
-		String myTestXML = testKML.toString();
-		String myControlXML = "<kml><Document><Folder><name></name><Placemark><name></name><magnitude></magnitude><Point><coordinates></coordinates></Point></Placemark><Placemark><name></name><magnitude></magnitude><Point><coordinates></coordinates></Point></Placemark></Folder></Document></kml>";
-				
-		try {
-			assertXMLEqual("Comparing test xml to control xml",myControlXML, myTestXML);
-		} catch (SAXException e) {
-			
-			e.printStackTrace();
-		} catch (IOException e) {
-			
-			e.printStackTrace();
-		}
+		//Test ob Methode KML zurueck gibt
+		TaxiEinstiegStatistikService testTESS = new TaxiEinstiegStatistikService();	
+		Assert.assertTrue(testTESS.getEinstiegStatistik("00:00:00", "24:00:00") instanceof KML);	
+	}
+	
+	@Test
+	public void testXMLContent() throws IOException, SAXException {
 		
+		String myControlXML = "</coordinates>";
+		String inputLine;
+        String myTestXML = new String();
+		
+		URL url = new URL("http://localhost:8080/rest/TaxiEinstiegStatistik");	
+        BufferedReader in = new BufferedReader(
+        new InputStreamReader(url.openStream()));
+
+        while ((inputLine = in.readLine()) != null)
+            myTestXML += inputLine;
+        in.close();
+		
+	//	System.out.println("alt: " +myControlXML);
+	//	System.out.println("neu: " +myTestXML);
+		
+        XMLUnit.setIgnoreWhitespace(true);
+        XMLUnit.setIgnoreComments(true);
+        XMLUnit.setIgnoreDiffBetweenTextAndCDATA(true);
+        
+        Diff myDiff = DiffBuilder.compare(myControlXML).withTest(myTestXML)
+                .checkForSimilar() // a different order is always 'similar' not equals.
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText))
+                .build();
+
+        Assert.assertFalse("XML similar " + myDiff.toString(), myDiff.hasDifferences());
+        
+		//	assertXMLEqual("Vergleiche XML Struktur",myControlXML, myTestXML);
+		//	assertNodeTest
+		//	XMLTestCase.assertEquals(myControlXML, myTestXML);
+		//	XMLTestCase.assertSame(myControlXML, myTestXML);
 	}
 }
