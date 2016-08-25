@@ -112,7 +112,7 @@ public class DatenbankAdapter {
      Timestamp t = resultSet.getTimestamp("source_time");
      Date date = new Date(t.getTime());
      Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
-     String point = "(" + geom.getY() + "," + geom.getX() + ")";
+     String point = geom.getY() + "," + geom.getX();
      list.add(new SimpleEntry(point,date));
 }
          
