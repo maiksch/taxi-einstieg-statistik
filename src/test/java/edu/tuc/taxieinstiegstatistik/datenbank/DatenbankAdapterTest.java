@@ -7,6 +7,7 @@ import org.postgis.Point;
 import javafx.util.*;
 import java.util.Date;
 import java.sql.Timestamp;
+import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,11 @@ public class DatenbankAdapterTest{
     @Test
     public void testCoordinateQuery()  {
         DatenbankAdapter datenbankAdapter = DatenbankAdapter.getInstance();
-        List<Pair<Point,Date>> objects = datenbankAdapter.getStartingPointCoordinates("00:00:00", "24:00:00");
+        List<SimpleEntry<Point,Date>> objects = datenbankAdapter.getStartingPointCoordinates("00:00:00", "24:00:00");
 
         
         
-        for (Pair<Point, java.util.Date> list : objects)
+        for (SimpleEntry<Point, Date> list : objects)
             System.out.println(list.getKey() + ", " + list.getValue());
 
 

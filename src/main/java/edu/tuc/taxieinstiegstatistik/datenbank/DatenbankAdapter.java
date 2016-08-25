@@ -81,17 +81,19 @@ public class DatenbankAdapter {
     /**
      * @return
      */
-    public List<Pair<Point,Date>> getStartingPointCoordinates(String ab, String bis) {
+    public List<SimpleEntry<Point,Date>> getStartingPointCoordinates(String ab, String bis) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        List<Pair<Point,Date>> list = new ArrayList<>();
-        
+//        Date date = null;
+//        Point geom = null;
+        List<SimpleEntry<Point,Date>> list = new ArrayList<>();
+//        AbstractMap<Point,Date> am = new AbstractMap<Point, Date>();
         
         // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
-        String query = "SELECT ST_Transform(target_cand_geom, 4326) AS geom,"
-                     + "source_time"
-                     + "FROM fcd_osm_1day"
+        String query = "SELECT ST_Transform(target_cand_geom, 4326) AS geom, "
+                     + "source_time "
+                     + "FROM fcd_osm_1day "
                      + "WHERE source_candidate_nr = ? AND source_time BETWEEN ? and ? ";
 
         try {
@@ -116,11 +118,14 @@ public class DatenbankAdapter {
             
 
             
-            Timestamp t = resultSet.getTimestamp(query);
-            Date date = new Date(t.getTime());
-            Point geom = new Point(geom.getY() + geom.getX(), 0);
-            list.add(new AbstractMap.SimpleEntry(geom,date));
+        
 
+while(resultSet.next()){
+    Timestamp t = resultSet.getTimestamp("source_time");
+    Date date = new Date(t.getTime());
+    Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
+     list.add(new SimpleEntry(geom,date));
+}
          
             
 //            while (resultSet.next()) {
