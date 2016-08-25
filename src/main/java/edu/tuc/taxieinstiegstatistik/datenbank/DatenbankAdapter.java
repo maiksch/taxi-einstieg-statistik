@@ -75,11 +75,11 @@ public class DatenbankAdapter {
      */
     
 
-    public List<SimpleEntry<Point,Date>> getStartingPointCoordinates(String ab, String bis) {
+    public List<SimpleEntry<String,Date>> getStartingPointCoordinates(String ab, String bis) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        List<SimpleEntry<Point,Date>> list = new ArrayList<>();
+        List<SimpleEntry<String,Date>> list = new ArrayList<>();
         
         // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
         String query = "SELECT ST_Transform(target_cand_geom, 4326) AS geom, "
@@ -112,7 +112,8 @@ public class DatenbankAdapter {
      Timestamp t = resultSet.getTimestamp("source_time");
      Date date = new Date(t.getTime());
      Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
-     list.add(new SimpleEntry(geom,date));
+     String point = "(" + geom.getY() + "," + geom.getX() + ")";
+     list.add(new SimpleEntry(point,date));
 }
          
         } catch (SQLException e) {

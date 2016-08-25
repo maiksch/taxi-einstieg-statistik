@@ -13,10 +13,10 @@ public class DatenbankAdapterTest {
 	public void testCoordinateQuery() {
 		DatenbankAdapter datenbankAdapter = DatenbankAdapter.getInstance();
 
-		List<SimpleEntry<Point, Date>> objects = datenbankAdapter.getStartingPointCoordinates("00:00:00", "24:00:00");
+		List<SimpleEntry<String, Date>> objects = datenbankAdapter.getStartingPointCoordinates("00:00:00", "24:00:00");
 
-		for (SimpleEntry<Point, Date> list : objects)
-			System.out.println(list.getKey() + ", " + list.getValue());
+		for (SimpleEntry<String, Date> list : objects)
+			System.out.println(list.getKey() + "  " + list.getValue());
 
 		Assert.assertTrue(!objects.isEmpty());
 	}
