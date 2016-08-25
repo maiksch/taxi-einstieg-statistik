@@ -4,7 +4,11 @@ import edu.tuc.taxieinstiegstatistik.datenbank.DatenbankAdapter;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Smadback on 09.08.2016.
@@ -47,14 +51,15 @@ public class TaxiEinstiegStatistikService {
 
         //Datenbank Abfrage
         DatenbankAdapter daba = DatenbankAdapter.getInstance();
-        ArrayList<org.postgis.Point> objects = daba.getStartingPointCoordinates(ab, bis);
+        List<SimpleEntry<String,Date>> objects = daba.getStartingPointCoordinates(ab, bis);
         //Placemark Liste
         ArrayList<Placemark> placemarks = new ArrayList<>();
         //fuer jedes enthaltene Koordinaten Paar eine Point und Placemark Instanz
-        for (org.postgis.Point p : objects) {
+        for (SimpleEntry<String, Date> p : objects) {
             Point point = new Point();
-            point.setCoordinates("" + p.getX() + "," + p.getY() + ",0");
+            point.setCoordinates("" + p.getKey() + ",0");
             Placemark placemark = new Placemark();
+            placemark.setName(p.getValue().toString());
             placemark.setPoint(point);
             placemarks.add(placemark);
         }
