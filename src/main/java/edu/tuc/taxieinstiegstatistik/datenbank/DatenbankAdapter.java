@@ -4,8 +4,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbcp.DelegatingConnection;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
-import javafx.util.*;
-import java.lang.Object;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,17 +12,11 @@ import java.sql.Timestamp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 
 
@@ -81,26 +73,14 @@ public class DatenbankAdapter {
     /**
      * @return
      */
-<<<<<<< HEAD
-//      public ArrayList<SimpleEntry<Point, Timestamp>> getStartingPointCoordinates(String ab, String bis) {
-        public ArrayList<Point> getStartingPointCoordinates(String ab, String bis) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        ArrayList<Point> result = new ArrayList<>();
-//      ArrayList<AbstractMap.SimpleEntry<Point, Timestamp>> liste = new ArrayList<AbstractMap.SimpleEntry<Point,Timestamp>>();
+    
 
-=======
     public List<SimpleEntry<Point,Date>> getStartingPointCoordinates(String ab, String bis) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-//        Date date = null;
-//        Point geom = null;
         List<SimpleEntry<Point,Date>> list = new ArrayList<>();
-//        AbstractMap<Point,Date> am = new AbstractMap<Point, Date>();
         
->>>>>>> refs/remotes/origin/KyleBranch
         // Query der direkt die konvertierung von UTM zu LatLong vornimmt, Zeitraum von 12:00:00 bis 13:00:00
         String query = "SELECT ST_Transform(target_cand_geom, 4326) AS geom, "
                      + "source_time "
@@ -112,9 +92,8 @@ public class DatenbankAdapter {
             connection = DatenbankAdapter.getInstance().getConnection();
             statement = connection.prepareStatement(query);
             statement.setInt(1, 1); // source_candiddate_nr = 1, weil dies immer dem Einstieg der Taxifahrt entspricht
-            statement.setTimestamp(2, Timestamp.valueOf("2014-10-07 " + ab)); // hole alle daten von
+            statement.setTimestamp(2, Timestamp.valueOf("2014-10-07 " + ab));  // hole alle daten von
             statement.setTimestamp(3, Timestamp.valueOf("2014-10-07 " + bis)); // hole alle daten bis
-
 
             // Statement abschicken
             resultSet = statement.executeQuery();
@@ -127,33 +106,15 @@ public class DatenbankAdapter {
             connection = ((DelegatingConnection) connection).getInnermostDelegate();
             ((org.postgresql.PGConnection) connection).addDataType("geometry", Class.forName("org.postgis.PGgeometry"));
             
-
-            
         
 
-while(resultSet.next()){
-    Timestamp t = resultSet.getTimestamp("source_time");
-    Date date = new Date(t.getTime());
-    Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
+    while(resultSet.next()){
+     Timestamp t = resultSet.getTimestamp("source_time");
+     Date date = new Date(t.getTime());
+     Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
      list.add(new SimpleEntry(geom,date));
 }
          
-            
-//            while (resultSet.next()) {
-//                Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
-//                list.add(geom);
-//            }
-
-<<<<<<< HEAD
-            while (resultSet.next()) {
-//                Entry<Point, Timestamp> geom = (Entry<Point, Timestamp>) ((PGgeometry) resultSet.getObject(1)).getGeometry();
-//                liste.addAll((Collection<? extends SimpleEntry<Point, Timestamp>>) geom);
-                  Point geom = (Point) ((PGgeometry) resultSet.getObject(1)).getGeometry();
-                  result.add(geom);
-            }
-=======
->>>>>>> refs/remotes/origin/KyleBranch
-
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -171,12 +132,8 @@ while(resultSet.next()){
             }
         }
 
-<<<<<<< HEAD
-//      return liste;
-        return result;
-=======
+
         return list;
->>>>>>> refs/remotes/origin/KyleBranch
     }
 
     /**
