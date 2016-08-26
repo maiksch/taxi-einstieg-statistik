@@ -1,10 +1,28 @@
 package edu.tuc.taxieinstiegstatistik.service;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
+/**
+ * 
+ * Klasse zur erzeugung der XML Tag-Struktur.
+ * Die Placemark Klasse erzeugt das vierte (ohne <Folder><name>) XML-Tag Element.
+ * zusaetzlich beinhaelt das Placemark Tag die Tags <name> und <Magnitude> 
+ * inklusive Werte:
+ * 
+ * <kml> 		
+ * 	<Document>
+ * 		<Folder>		
+ * 			<name></name>
+ * 			 <Placemark> 	<=====
+ * 			  <name></name>
+ * 			  <magnitude></magnitude>
+ * 			  <Point>
+ * 				<coordinates></coordinates> 
+ *			  </Point>
+ *			</Placemark> 	<=====
+ *		</Folder>		
+ *	 </Document>
+ * </kml>
+ */
 public class Placemark {
 
     private String name = "";

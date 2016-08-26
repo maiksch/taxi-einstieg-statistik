@@ -2,7 +2,6 @@ package edu.tuc.taxieinstiegstatistik.datenbank;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.postgis.Point;
 import java.util.Date;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;

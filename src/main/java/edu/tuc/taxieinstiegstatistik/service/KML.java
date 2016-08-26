@@ -3,7 +3,27 @@ package edu.tuc.taxieinstiegstatistik.service;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
+/**
+ * 
+ * Klasse zur erzeugung der XML Tag-Struktur.
+ * Die KML Klasse erzeugt das root XML-Tag Element
+ * zusaetzlich erhaelt das root Tag den XML- und Atom namespace:
+ * 
+ * <kml> 		<=====
+ * 	<Document>
+ * 		<Folder>
+ * 			<name></name>
+ * 			 <Placemark>
+ * 			  <name></name>
+ * 			  <magnitude></magnitude>
+ * 			  <Point>
+ * 				<coordinates></coordinates> 
+ *			  </Point>
+ *			</Placemark>
+ *		</Folder>
+ *	 </Document>
+ * </kml>		<=====
+ */
 @XmlRootElement(name = "kml")
 public class KML {
 

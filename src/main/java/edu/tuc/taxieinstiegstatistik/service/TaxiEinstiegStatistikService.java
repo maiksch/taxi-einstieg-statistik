@@ -17,26 +17,20 @@ import java.util.List;
  * <p>
  * <?xml version="1.0" encoding="UTF-8"?>
  * <KML xmlns="http://earth.google.com/kml/2.0" xmlns:atom="http://www.w3.org/2005/Atom">
- * <Document>
- * <Folder>
- * <name>Magnitude 5</name>
- * <Placemark id="2012 Feb 9 18:52:48.39 UTC">
- * <name>2012 Feb 9 18:52:48.39 UTC</name>
- * <magnitude>45.0</magnitude>
- * <Point>
- * <coordinates>10.521111,52.269167,0</coordinates>
- * </Point>
- * </Placemark>
- * <Placemark id="2012 Feb 9 18:52:48.39 UTC">
- * <name>2012 Feb 9 18:52:48.39 UTC</name>
- * <magnitude>5.9</magnitude>
- * <Point>
- * <coordinates>10.521111,52.269167,0</coordinates>
- * </Point>
- * </Placemark>
- * </Folder>
- * </Document>
- * </KML>
+ * * <kml> 		
+ * 	<Document>
+ * 		<Folder>
+ * 			<name></name>
+ * 			 <Placemark>
+ * 			  <name></name>
+ * 			  <magnitude></magnitude>
+ * 			  <Point>
+ * 				<coordinates></coordinates> 
+ *			  </Point>
+ *			</Placemark>
+ *		</Folder>
+ *	 </Document>
+ * </kml>		
  * <p>
  * Die XML-Tagstruktur wird durch die Klassennamen und das Einbeziehen von weiteren Klassenobjekten aufgebaut.
  */
@@ -55,6 +49,7 @@ public class TaxiEinstiegStatistikService {
         //Placemark Liste
         ArrayList<Placemark> placemarks = new ArrayList<>();
         //fuer jedes enthaltene Koordinaten Paar eine Point und Placemark Instanz
+        //die erzeugte XML-Struktur kann dem Klassenvorwort oder den einzelnen XML-Tag-Struktur Klassen entnommen werden
         for (SimpleEntry<String, Date> p : objects) {
             Point point = new Point();
             point.setCoordinates("" + p.getKey() + ",0");
@@ -63,7 +58,8 @@ public class TaxiEinstiegStatistikService {
             placemark.setPoint(point);
             placemarks.add(placemark);
         }
-
+        //Verbinden der <Placemark><Point><coordinates> Folge mit
+        //der aeusseren XML-Struktur und dem root Element
         Folder folder = new Folder();
         folder.setName("Magnitude 5");
         folder.setPlacemarks(placemarks);
