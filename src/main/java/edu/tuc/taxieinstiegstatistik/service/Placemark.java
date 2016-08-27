@@ -1,6 +1,7 @@
 package edu.tuc.taxieinstiegstatistik.service;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 /**
  * 
  * Klasse zur erzeugung der XML Tag-Struktur.
@@ -23,6 +24,9 @@ import javax.xml.bind.annotation.XmlElement;
  *	 </Document>
  * </kml>
  */
+
+@XmlType(propOrder = {"name", "magnitude", "point"})
+
 public class Placemark {
 
     private String name = "";
@@ -41,7 +45,7 @@ public class Placemark {
     public String getName() {
         return name;
     }
-
+    @XmlElement(name = "name")
     public void setName(String name) {
     	this.name = name;
     }
@@ -49,7 +53,7 @@ public class Placemark {
     public String getMagnitude() {
         return magnitude;
     }
-
+    @XmlElement(name = "magnitude")
     public void setMagnitude(String magnitude) {
         this.magnitude = magnitude;
     }
