@@ -39,13 +39,13 @@ public class TaxiEinstiegStatistikService {
 
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public KML getEinstiegStatistik(@DefaultValue("00:00:00") @QueryParam("ab") String ab,
-                                    @DefaultValue("24:00:00") @QueryParam("bis") String bis) {
+    public KML getEinstiegStatistik(@DefaultValue("00:00") @QueryParam("ab") String ab,
+                                    @DefaultValue("23:59") @QueryParam("bis") String bis) {
 
 
         //Datenbank Abfrage
         DatenbankAdapter daba = DatenbankAdapter.getInstance();
-        List<SimpleEntry<String,Date>> objects = daba.getStartingPointCoordinates(ab, bis);
+        List<SimpleEntry<String,Date>> objects = daba.getStartingPointCoordinates(ab+":00", bis+":59");
         //Placemark Liste
         ArrayList<Placemark> placemarks = new ArrayList<>();
         //fuer jedes enthaltene Koordinaten Paar eine Point und Placemark Instanz

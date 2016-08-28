@@ -19,7 +19,7 @@
 			<h1>Taxi Einstieg Statistik</h1>
 			<p>Zeitabhängige Vorhersage von HotSpots anhand von Taxi FCDs</p>
 		</div>
-		<div id="fehler" class="alert alert-success"></div>
+		<div id="fehler" class="alert"></div>
 		<div id="map" class="map"></div>
 		<div>
 			<form>
@@ -31,9 +31,9 @@
 			
 			<form method="get" action="/">		
 				<label>AbZeit</label>
-				  <input id="ab" name="ab" type="time" class="form-control" value="00:00:00"/>		
+				  <input id="ab" name="ab" type="time" class="form-control" value="00:00"/>		
 				<label>BisZeit</label>
-				  <input id="bis" name="bis" type="time" class="form-control" value="23:59:00"/>
+				  <input id="bis" name="bis" type="time" class="form-control" value="23:59"/>
 			<br />
 				<input type="submit" value="Neu Daten Laden" class="btn btn-success">
 			
@@ -60,37 +60,39 @@
 	<script>
 	
 		function starttest() {
-		if(document.getElementById("ab").value == "undefined") {
-			document.getElementById("ab").value = "00:00:00";
+		if($(location).attr('search') == "") {
+			//$(location).attr({search: '?ab=00:00&bis=23:59'})
+			var search = "?ab=00:00&bis=23:59";
 		}
 		
-		if(document.getElementById("bis").value == "undefined") {
-			document.getElementById("bis").value = "23:59:59";
+		if((decodeURI(getUrlVars().ab).length == 5) && (decodeURI(getUrlVars().bis).length == 5)) {
+		
+			dates_ab = document.getElementById("ab").value.split(":");
+			dates_bis = document.getElementById("bis").value.split(":");
+			var date1 = new Date (2014,10,7,dates_ab[0],dates_ab[1],00);
+			document.getElementById("ab").value = ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2);
+			var date2 = new Date (2014,10,7,dates_bis[0],dates_bis[1],00);
+			document.getElementById("bis").value = ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2);
+			if(date1.getTime() > date2.getTime()) {
+				$('#fehler').addClass('alert-danger');
+				$('#fehler').html("<strong>Fehler:</strong> AbZeit größer als BisZeit: <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
+			} 
+			else {
+				$('#fehler').addClass('alert-success');
+				$('#fehler').html("<strong>Angezeigte Daten:</strong> von " + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +" bis " + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2));	
+				var search = "?ab=" + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +"&bis=" + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2));
+			}
 		}
-		
-		dates_ab = document.getElementById("ab").value.split(":");
-		dates_bis = document.getElementById("bis").value.split(":");
-		
-		
-		var date1 = new Date (2014,10,7,dates_ab[0],dates_ab[1],dates_ab[2]);
-		document.getElementById("bis").value = date1.getHours()+":"+date1.getMinutes()+":"+date1.getSeconds();
-		var date2 = new Date (2014,10,7,dates_bis[0],dates_bis[1],dates_bis[2]);
-		document.getElementById("bis").value = date2.getHours()+":"+date2.getMinutes()+":"+date2.getSeconds();
-		
-		if(date1.getTime() > date2.getTime()) {
-			document.getElementById("fehler").className = "alert alert-danger";
-			document.getElementById("fehler").innerHTML = "<strong>Danger:</strong> AbZeit größer als BisZeit";
-			//alert("AbZeit größer als BisZeit");
-			document.getElementById("ab").value = "00:00:00";
-			document.getElementById("bis").value = "23:59:59";	
-		} 
 		else {
-			document.getElementById("fehler").innerHTML = "<strong>Angezeigte Daten</strong> von " + document.getElementById("ab").value + " bis " + document.getElementById("bis").value;
-		
-		}
+			$('#fehler').addClass('alert-danger');
+				$('#fehler').html("<strong>Fehler:</strong> Falsches Zeit Format (hh:mm): <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
+			var search = "?ab=00:00&bis=00:00";
+			}
+		return search;
 	}
 	
-		var QueryString = function () {
+	
+		var QueryString = function (search) {
 	  // This function is anonymous, is executed immediately and 
 	  // the return value is assigned to QueryString!
 	  var query_string = {};
@@ -110,10 +112,12 @@
 		  query_string[pair[0]].push(decodeURIComponent(pair[1]));
 		}
 	  } 
-	      document.getElementById("ab").value = query_string.ab;
-	      document.getElementById("bis").value = query_string.bis;
+			$('#ab').attr({value: query_string.ab})
+			$('#bis').attr({value: query_string.bis})
+	     // document.getElementById("ab").value = query_string.ab;
+	     // document.getElementById("bis").value = query_string.bis;
 		  
-	  return "http://localhost:8080/rest/TaxiEinstiegStatistik?"+query;
+	  return "/rest/TaxiEinstiegStatistik?"+search;
 	}();
 
 	  var blur = document.getElementById('blur');
@@ -164,6 +168,20 @@
       radius.addEventListener('input', function() {
         vector.setRadius(parseInt(radius.value, 10));
       });
+	  
+	  
+	  function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
 </script>
 
   </body>
