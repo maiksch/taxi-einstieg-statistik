@@ -12,7 +12,7 @@
 	
 	
   </head>
-  <body >
+  <body>
   
 	<div class="container">
 		<div class="jumbotron">
@@ -69,25 +69,34 @@
 		} 
 		else {
 		
-		if((decodeURI(getUrlVars().ab).length == 5) && (decodeURI(getUrlVars().bis).length == 5)) {
+		if((decodeURI(getUrlVars().ab).replace("%3A", ":").length == 5) && (decodeURI(getUrlVars().bis).replace("%3A", ":").length == 5)) {
 		
 			dates_ab = document.getElementById("ab").value.split(":");
 			dates_bis = document.getElementById("bis").value.split(":");
-			var date1 = new Date (2014,10,7,dates_ab[0],dates_ab[1],00);
-			document.getElementById("ab").value = ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2);
-			var date2 = new Date (2014,10,7,dates_bis[0],dates_bis[1],00);
-			document.getElementById("bis").value = ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2);
-			if(date1.getTime() > date2.getTime()) {
+			
+			if(isNaN(dates_ab[0]) || isNaN(dates_ab[1]) || isNaN(dates_bis[0]) || isNaN(dates_bis[1])){
 				$('#fehler').addClass('alert-danger');
-				$('#fehler').html("<strong>Fehler:</strong> AbZeit größer als BisZeit: <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
-				query = "ab=00:00&bis=23:59";
+				$('#fehler').html("<strong>Fehler:</strong> Falsches Zeit Format (hh:mm): <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
+				query = "ab=00:00&bis=00:00";
 			} 
+			else {
+			
+				var date1 = new Date (2014,10,7,dates_ab[0],dates_ab[1],00);
+				document.getElementById("ab").value = ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2);
+				var date2 = new Date (2014,10,7,dates_bis[0],dates_bis[1],00);
+				document.getElementById("bis").value = ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2);
+				if(date1.getTime() > date2.getTime()) {
+					$('#fehler').addClass('alert-danger');
+					$('#fehler').html("<strong>Fehler:</strong> AbZeit größer als BisZeit: <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
+					query = "ab=00:00&bis=23:59";
+				}
 			else {
 				$('#fehler').addClass('alert-success');
 				$('#fehler').html("<strong>Angezeigte Daten:</strong> von " + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +" bis " + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2));	
 				query = "ab=" + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +"&bis=" + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2);
 				
 				}
+			}
 		}
 		else {
 			$('#fehler').addClass('alert-danger');
