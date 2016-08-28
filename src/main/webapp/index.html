@@ -12,7 +12,7 @@
 	
 	
   </head>
-  <body onload="starttest()">
+  <body >
   
 	<div class="container">
 		<div class="jumbotron">
@@ -60,10 +60,14 @@
 	<script>
 	
 		function starttest() {
+		var query;
 		if($(location).attr('search') == "") {
 			//$(location).attr({search: '?ab=00:00&bis=23:59'})
-			var search = "?ab=00:00&bis=23:59";
-		}
+			$('#fehler').addClass('alert-success');
+			$('#fehler').html("<strong>Angezeigte Daten:</strong> von 00:00 bis 23:59");	
+			query = "ab=00:00&bis=23:59";
+		} 
+		else {
 		
 		if((decodeURI(getUrlVars().ab).length == 5) && (decodeURI(getUrlVars().bis).length == 5)) {
 		
@@ -76,23 +80,25 @@
 			if(date1.getTime() > date2.getTime()) {
 				$('#fehler').addClass('alert-danger');
 				$('#fehler').html("<strong>Fehler:</strong> AbZeit größer als BisZeit: <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
+				query = "ab=00:00&bis=23:59";
 			} 
 			else {
 				$('#fehler').addClass('alert-success');
 				$('#fehler').html("<strong>Angezeigte Daten:</strong> von " + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +" bis " + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2));	
-				var search = "?ab=" + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +"&bis=" + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2));
-			}
+				query = "ab=" + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +"&bis=" + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2);
+				
+				}
 		}
 		else {
 			$('#fehler').addClass('alert-danger');
 				$('#fehler').html("<strong>Fehler:</strong> Falsches Zeit Format (hh:mm): <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
-			var search = "?ab=00:00&bis=00:00";
+			query = "ab=00:00&bis=00:00";
 			}
-		return search;
+		 }
+		return query;
 	}
 	
-	
-		var QueryString = function (search) {
+		var QueryString = function () {
 	  // This function is anonymous, is executed immediately and 
 	  // the return value is assigned to QueryString!
 	  var query_string = {};
@@ -114,17 +120,15 @@
 	  } 
 			$('#ab').attr({value: query_string.ab})
 			$('#bis').attr({value: query_string.bis})
-	     // document.getElementById("ab").value = query_string.ab;
-	     // document.getElementById("bis").value = query_string.bis;
 		  
-	  return "/rest/TaxiEinstiegStatistik?"+search;
+	  return 0;
 	}();
 
 	  var blur = document.getElementById('blur');
       var radius = document.getElementById('radius');
       var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-          url: QueryString,
+          url: "/rest/TaxiEinstiegStatistik?" + starttest(),
           format: new ol.format.KML({
             extractStyles: false
           })
