@@ -12,6 +12,7 @@
 !*.html
 !source.kml
 !GeoJ.json
+!ol.css
 
 #zur Sicherheit den target-Ordner komplett ignorieren
 target/**

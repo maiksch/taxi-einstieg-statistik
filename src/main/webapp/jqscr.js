@@ -1,6 +1,10 @@
+// Java Script zum Abfangen von fehlerhaften Anfragen, Definition der Map und aufruf des XML-Service
+
 $(document).ready(function(){
+	//Funktion beim Laden der index.html
 function starttest() {
 		var query;
+		//Überprüfung, ob ab und bis Zeit gesetzt wurde
 		if($(location).attr('search') == "") {
 			//$(location).attr({search: '?ab=00:00&bis=23:59'})
 			$('#fehler').addClass('alert-success');
@@ -8,29 +12,33 @@ function starttest() {
 			query = "ab=00:00&bis=23:59";
 		} 
 		else {
-		
+		//Daten wurden zeitlich eingegrenzt 
+		//Überprüfen ob ab und bis Zeit 5-stellig
 		if((decodeURI(getUrlVars().ab).replace("%3A", ":").length == 5) && (decodeURI(getUrlVars().bis).replace("%3A", ":").length == 5)) {
 		
 			dates_ab = document.getElementById("ab").value.split(":");
 			dates_bis = document.getElementById("bis").value.split(":");
-			
+			//Überprüfen ob Zahlen eingegeben wurden
 			if(isNaN(dates_ab[0]) || isNaN(dates_ab[1]) || isNaN(dates_bis[0]) || isNaN(dates_bis[1])){
 				$('#fehler').addClass('alert-danger');
 				$('#fehler').html("<strong>Fehler:</strong> Falsches Zeit Format (hh:mm): <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
 				query = "ab=00:00&bis=00:00";
 			} 
 			else {
-			
+				
+				//Erstellung eines Datums, um zeitlichen Abstand vergleichen zu können			
 				var date1 = new Date (2014,10,7,dates_ab[0],dates_ab[1],00);
 				document.getElementById("ab").value = ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2);
 				var date2 = new Date (2014,10,7,dates_bis[0],dates_bis[1],00);
 				document.getElementById("bis").value = ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2);
+				//AbZeit liegt nach BisZeit
 				if(date1.getTime() > date2.getTime()) {
 					$('#fehler').addClass('alert-danger');
-					$('#fehler').html("<strong>Fehler:</strong> AbZeit gr��er als BisZeit: <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
+					$('#fehler').html("<strong>Fehler:</strong> AbZeit größer als BisZeit: <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
 					query = "ab=00:00&bis=23:59";
 				}
-			else {
+				//Daten Korrekt eingegeben
+				else {
 				$('#fehler').addClass('alert-success');
 				$('#fehler').html("<strong>Angezeigte Daten:</strong> von " + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +" bis " + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2));	
 				query = "ab=" + ('0' + date1.getHours()).slice(-2) + ":" + ('0' + date1.getMinutes()).slice(-2) +"&bis=" + ('0' + date2.getHours()).slice(-2) + ":" + ('0' + date2.getMinutes()).slice(-2);
@@ -38,18 +46,21 @@ function starttest() {
 				}
 			}
 		}
+		//Daten im falschen Format eingegeben
 		else {
 			$('#fehler').addClass('alert-danger');
 				$('#fehler').html("<strong>Fehler:</strong> Falsches Zeit Format (hh:mm): <a href='?ab=00:00&bis=23:59'>Neu laden</a>");
 			query = "ab=00:00&bis=00:00";
 			}
 		 }
+		 //Rückgabe der Variablen, um XML-Service einzugrenzen
 		return query;
 	}
 	
 		var QueryString = function () {
 	  // This function is anonymous, is executed immediately and 
 	  // the return value is assigned to QueryString!
+	  //Ausgabe der Url-Search-Variabelen (Anwendung hier ab/bis Zeit)
 	  var query_string = {};
 	  var query = window.location.search.substring(1);
 	  var vars = query.split("&");
@@ -72,13 +83,15 @@ function starttest() {
 		  
 	  return 0;
 	}();
-
+		//Eintrübungsgröße auf der Map
 	  var blur = document.getElementById('blur');
+		//Radius der Punkte auf der Map
       var radius = document.getElementById('radius');
       var vector = new ol.layer.Heatmap({
         source: new ol.source.Vector({
-          url: "/rest/TaxiEinstiegStatistik?" + starttest(),
-          format: new ol.format.KML({
+			//Aufruf des XML-Service mit eingrenzenden Variablen
+			 url: "/rest/TaxiEinstiegStatistik?" + starttest(),
+			 format: new ol.format.KML({
             extractStyles: false
           })
         }),
@@ -87,7 +100,7 @@ function starttest() {
       });
 	  
       vector.getSource().on('addfeature', function(event) {
-        // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
+        // /rest/TaxiEinstiegStatistik stores the magnitude of each entry in a
         // standards-violating <magnitude> tag in each Placemark.  We extract it from
         // the Placemark's name instead.
         var name = event.feature.get('name');
@@ -114,7 +127,7 @@ function starttest() {
         vector.setRadius(parseInt(radius.value, 10));
       });
 	  
-	  
+	  //Funktion, die die Uhrzeit auf der Url ausließt 
 	  function getUrlVars()
 {
     var vars = [], hash;
