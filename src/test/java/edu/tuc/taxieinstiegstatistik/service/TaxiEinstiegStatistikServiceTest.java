@@ -16,14 +16,14 @@ public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 	 * Das von der Methode "testGetEinstiegStatistik" zurueckgegebene XML wird auf 
 	 * seine korrekte Struktur getestet.
 	 */
-
+/*
 	@Test
 	public void testGetEinstiegStatistik() {
 		//Test ob Methode KML zurueck gibt
 		TaxiEinstiegStatistikService testTESS = new TaxiEinstiegStatistikService();	
 		Assert.assertTrue(testTESS.getEinstiegStatistik("00:00:00", "24:00:00") instanceof KML);	
 	}
-	
+*/	
 	@Test
 	public void testXMLContent() throws IOException, SAXException {
 		//Test auf XML- Inhalt: wenn Tag </coordinates> enthalten dann xml valide 
