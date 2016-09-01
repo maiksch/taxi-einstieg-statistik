@@ -7,9 +7,11 @@ import java.net.URL;
 
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+@Ignore
 public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 	/**
 	 * Test Klasse TaxiEinstiegStatistikService
@@ -23,7 +25,7 @@ public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 		TaxiEinstiegStatistikService testTESS = new TaxiEinstiegStatistikService();	
 		Assert.assertTrue(testTESS.getEinstiegStatistik("00:00:00", "24:00:00") instanceof KML);	
 	}
-*/	
+*/
 	@Test
 	public void testXMLContent() throws IOException, SAXException {
 		//Test auf XML- Inhalt: wenn Tag </coordinates> enthalten dann xml valide 

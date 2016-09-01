@@ -5,6 +5,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.net.InetSocketAddress;
 
@@ -28,20 +29,29 @@ public final class EmbeddedJetty
      * Jetty Instanz wird aber hier gestartet
      *
      * @param p_bind Binding Adresse
+     * @throws Exception bei Initialisierungsfehler
      */
-    private EmbeddedJetty(final InetSocketAddress p_bind )
+    private EmbeddedJetty(final InetSocketAddress p_bind ) throws Exception
     {
+        // WebAppContext, um die web.xml zu verarbeiten
+        final WebAppContext l_webapp = new WebAppContext();
+        l_webapp.setContextPath( "/" );
+
+        l_webapp.setDescriptor( EmbeddedJetty.class.getResource("/WEB-INF/web.xml").toString() );
+        //l_webapp.setResourceBase( EmbeddedJetty.class.getResource("").toString() );
+
         final Server l_server = new Server( p_bind );
-
-
+        l_server.setHandler( l_webapp );
+        l_server.start();
     }
 
 
     /**
      * main
      * @param p_args command-line Argumente
+     * @throws Exception bei Initialisierungsfehler
      */
-    public static void main( final String[] p_args )
+    public static void main( final String[] p_args ) throws Exception
     {
         // --- definiere Command-Line Parameter ------------------------------------------------------------------------
 
