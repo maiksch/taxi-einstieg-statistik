@@ -11,7 +11,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-@Ignore
 public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 	/**
 	 * Test Klasse TaxiEinstiegStatistikService

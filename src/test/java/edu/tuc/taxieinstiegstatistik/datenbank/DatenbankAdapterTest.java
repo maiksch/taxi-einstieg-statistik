@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 
-@Ignore
 public class DatenbankAdapterTest {
 
 	@Test
