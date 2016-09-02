@@ -1,6 +1,7 @@
 package edu.tuc.taxieinstiegstatistik.datenbank;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import java.util.Date;
 import java.util.AbstractMap.SimpleEntry;

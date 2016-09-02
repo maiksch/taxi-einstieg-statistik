@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.postgis</groupId>
             <artifactId>postgis-jdbc</artifactId>
-            <version>1.3.3</version>
+            <version>1.5.2</version>
         </dependency>
 
         <!-- ENDE DATENBANK -->
@@ -97,23 +97,28 @@
         <dependency>
             <groupId>org.renjin</groupId>
             <artifactId>renjin-script-engine</artifactId>
-            <version>RELEASE</version>
+            <version>0.8.2203</version>
         </dependency>
 
         <!-- Jetty -->
 
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>9.2.3.v20140905</version>
+            <groupId>org.eclipse.jetty.aggregate</groupId>
+            <artifactId>jetty-all-server</artifactId>
+            <version>8.1.19.v20160209</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>9.2.3.v20140905</version>
+            <artifactId>jetty-jsp-2.1</artifactId>
+            <version>7.5.0.RC2</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jsp-2.1</artifactId>
+            <version>6.0.0rc4</version>
+        </dependency>
 
         <!-- Ende Jetty -->
 
@@ -123,14 +128,14 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>2.23.1</version>
+            <version>2.23.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-servlet -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-            <version>2.23.1</version>
+            <version>2.23.2</version>
         </dependency>
 
         <!-- ENDE JERSEY -->
@@ -138,7 +143,7 @@
         <dependency>
    			 <groupId>org.glassfish.jersey.media</groupId>
     		 <artifactId>jersey-media-jaxb</artifactId>
-    		 <version>2.17</version>
+    		 <version>2.23.2</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/xmlunit/xmlunit -->
@@ -147,6 +152,18 @@
     		<artifactId>xmlunit</artifactId>
     		<version>1.6</version>
 		</dependency>
+
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>9.4.0.M1</version>
+        </dependency>
 
     </dependencies>
 
@@ -178,6 +195,9 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
+            </resource>
         </resources>
 
         <!-- in dieser Section werden alle Plugins hinterlegt , die f¨ur den Buildprozess notwendig sind -->
@@ -203,73 +223,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
-                <configuration>
-                    <argLine>-Xmx3g</argLine>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.8</version>
-                <executions>
-                    <execution>
-                        <id>native-windows</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <!-- hier wird der Dateiname mit dazugehöriger Icon - Datei festgelegt , zusätzlich
-                            wird die ( Download -) URL des Programms festgelegt
-                            -->
-                            <headerType>gui</headerType>
-                            <outfile>target/${project.artifactId}-${project.version}.exe</outfile>
-                            <errTitle>Java Runtime 64 Bit Download</errTitle>
-                            <downloadUrl>http://www.java.com/en/download/manual.jsp</downloadUrl>
-                            <supportUrl>${project.url}</supportUrl>
-                            <icon>src/main/resources/icon.ico</icon>
-                            <!-- Single - Instance definiert , dass das Programm nur einmal gestartet werden kann -->
-                            <singleInstance>
-                                <mutexName>${project.artifactId}</mutexName>
-                                <windowTitle>${project.artifactId}</windowTitle>
-                            </singleInstance>
-                            <!-- dieser Eintrag legt die Parameter der Ausf ¨u hrung fest , JRE und Bit Version ,
-                            sowie Parameter die der JRE zur Ausf ¨u hrung mitgegeben werden
-                            -->
-                            <jre>
-                                <minVersion>1.8.0</minVersion>
-                                <runtimeBits>64</runtimeBits>
-                                <opts>
-                                    <opt>-Xmx5g</opt>
-                                    <opt>-XX:+UseParallelGC</opt>
-                                </opts>
-                            </jre>
-                            <!-- Windows -Datei - Informationen , die angezeigt werden , wenn die Eigenschaften des
-                            Executables angezeigt werden . Diese Eigenschaften m¨u ssen gesetzt werden
-                            -->
-                            <versionInfo>
-                                <fileVersion>${project.version}.0.0</fileVersion>
-                                <txtFileVersion>${project.version}.0.0</txtFileVersion>
-                                <fileDescription></fileDescription>
-                                <copyright>${project.organization.name}</copyright>
-                                <productVersion>${project.version}.0.0</productVersion>
-                                <txtProductVersion>${project.version}.0.0</txtProductVersion>
-                                <productName>${project.artifactId}</productName>
-                                <companyName>${project.organization.name}</companyName>
-                                <internalName>${project.artifactId}-${project.version}.jar</internalName>
-                                <originalFilename>${project.artifactId}-${project.version}.exe</originalFilename>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-
             <!-- Clean ist ein Plugin , das speziell f¨ur das Goal " mvn clean " genutzt werden kann , um tempor ¨are Dateien zu l¨o schen .
             Per Default
             l¨o scht Maven den vollst ¨a ndigen " target " Ordner , je nach Bauprozess sind aber noch andere Dateien im Verzeichnis
@@ -292,35 +245,6 @@
                         </fileset>
                     </filesets>
                 </configuration>
-            </plugin>
-
-
-            <plugin>
-                <groupId>sh.tak.appbundler</groupId>
-                <artifactId>appbundle-maven-plugin</artifactId>
-                <version>1.0.4</version>
-                <configuration>
-                    <!-- Parameter f¨ur die JRE bei der Ausf ¨u hrung -->
-                    <jvmOptions>
-                        <jvmOption>-Xmx5g</jvmOption>
-                        <jvmOption>-XX:+UseParallelGC</jvmOption>
-                    </jvmOptions>
-                    <!-- Icon - Datei des Bundles und Datei - Name -->
-                    <iconFile>icon.icns</iconFile>
-                    <generateDiskImageFile>true</generateDiskImageFile>
-                    <bundleName>${project.artifactId}-${project.version}</bundleName>
-                    <!-- Klasse mit der " public static void main ( final String [] p_args )" Methode z.B. myproject . CMain -->
-                    <mainClass>edu.tuc.taxieinstiegstatistik.service</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>native-darwin</id>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <!-- Doxygen kann mit Hilfe dieses Plugins direkt aus Maven heraus gestartet werden . Der Aufruf dazu lautet " mvn site "
@@ -377,10 +301,20 @@
                                         vollst ¨a ndigen Namen (Paket - + Klassenname )
                                         angegeben werden z.B. myproject . CMain
                                         -->
-                                        <Main-Class>edu.tuc.taxieinstiegstatistik.service</Main-Class>
+                                        <Main-Class>edu.tuc.taxieinstiegstatistik.EmbeddedJetty</Main-Class>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
