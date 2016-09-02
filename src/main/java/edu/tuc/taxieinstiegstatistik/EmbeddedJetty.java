@@ -33,12 +33,14 @@ public final class EmbeddedJetty
      */
     private EmbeddedJetty(final InetSocketAddress p_bind ) throws Exception
     {
+        final String l_context = EmbeddedJetty.class.getProtectionDomain().getCodeSource().getLocation().toExternalForm();
+
         // WebAppContext, um die web.xml zu verarbeiten
         final WebAppContext l_webapp = new WebAppContext();
-        l_webapp.setContextPath( "/" );
+        l_webapp.setResourceBase( "." );
+        l_webapp.setDescriptor( "WEB-INF/web.xml" );
+        l_webapp.setContextPath( l_context.substring( 0, l_context.length()-1 ) );
 
-        l_webapp.setDescriptor( EmbeddedJetty.class.getResource("/WEB-INF/web.xml").toString() );
-        //l_webapp.setResourceBase( EmbeddedJetty.class.getResource("").toString() );
 
         final Server l_server = new Server( p_bind );
         l_server.setHandler( l_webapp );
