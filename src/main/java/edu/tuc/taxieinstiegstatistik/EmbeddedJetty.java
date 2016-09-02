@@ -91,6 +91,7 @@ public final class EmbeddedJetty
             Integer.parseInt( l_cli.getOptionValue( "port", DEFAULTPORT ) )
           )
         );
+        System.out.println("Server started.");
     }
 
 
