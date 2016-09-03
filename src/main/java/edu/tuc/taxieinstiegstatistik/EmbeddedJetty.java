@@ -7,6 +7,8 @@ import org.apache.commons.cli.Options;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.net.InetSocketAddress;
 
 /**
@@ -60,6 +62,8 @@ public final class EmbeddedJetty
         l_clioptions.addOption( "help", false, "zeigt diese Hilfe" );
         l_clioptions.addOption( "port", true, "Port des Server (default 8080)" );
         l_clioptions.addOption( "host", true, "Adresse des Servers (default localhost)" );
+        l_clioptions.addOption( "generateconfig", false, "Erzeugt die Anmeldedatei fuer die Datenbank" );
+        
 
         final CommandLine l_cli;
         try
@@ -75,6 +79,47 @@ public final class EmbeddedJetty
 
         // --- verarbeite Command-Line Parameter -----------------------------------------------------------------------
 
+        if ( l_cli.hasOption( "generateconfig" ) )
+        {
+
+
+        	//Ordner erzeugen
+            String path = System.getProperty("user.home") + File.separator + "taxistatistik";
+            String fileName = "db.properties";
+            File file = new File(path + File.separator + fileName);
+            File dir = new File(path);
+
+            if(dir.mkdir()) {
+            	file.createNewFile();
+                System.out.println("Datei erstellt: " + file.getName());
+
+                FileWriter writer = new FileWriter(file ,true);
+                writer.write("port=1234");
+                writer.write(System.getProperty("line.separator"));
+                writer.write("host=host");
+                writer.write(System.getProperty("line.separator"));
+                writer.write("db=db");
+                writer.write(System.getProperty("line.separator"));
+                writer.write("ssl=ssl");
+                writer.write(System.getProperty("line.separator"));
+                writer.write("usr=usr");
+                writer.write(System.getProperty("line.separator"));
+                writer.write("pw=pw");
+                writer.flush();
+                writer.close();
+                
+                System.out.println("Bitte passe die Datei mit den korrekten Anmeldedaten an.");
+
+            } else {
+                System.out.println(dir + " konnte nicht erstellt werden");
+            } 
+        
+            
+            
+        	System.exit( 0 );
+            return;
+        }
+        
         if ( l_cli.hasOption( "help" ) )
         {
             new HelpFormatter().printHelp( new java.io.File( EmbeddedJetty.class.getProtectionDomain().getCodeSource().getLocation().getPath() ).getName(), l_clioptions );
