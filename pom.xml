@@ -74,32 +74,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- R -->
-
-        <!-- https://mvnrepository.com/artifact/org.nuiton.thirdparty/JRI -->
-        <dependency>
-            <groupId>org.nuiton.thirdparty</groupId>
-            <artifactId>JRI</artifactId>
-            <version>0.9-6</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.github.lucarosellini.rJava/JRIEngine -->
-        <dependency>
-            <groupId>com.github.lucarosellini.rJava</groupId>
-            <artifactId>JRIEngine</artifactId>
-            <version>0.9-7</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.rosuda.REngine/Rserve -->
-        <dependency>
-            <groupId>org.rosuda.REngine</groupId>
-            <artifactId>Rserve</artifactId>
-            <version>1.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.renjin</groupId>
-            <artifactId>renjin-script-engine</artifactId>
-            <version>0.8.2203</version>
-        </dependency>
-
         <!-- Jetty -->
 
         <dependency>
