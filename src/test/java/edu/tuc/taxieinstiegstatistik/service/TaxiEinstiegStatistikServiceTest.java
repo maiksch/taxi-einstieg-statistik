@@ -20,7 +20,6 @@ public class TaxiEinstiegStatistikServiceTest extends XMLTestCase {
 	public void testGetEinstiegStatistik() {
 		//Test ob Methode KML zurueck gibt
 		TaxiEinstiegStatistikService testTESS = new TaxiEinstiegStatistikService();	
-		System.out.println(testTESS.getClass());
 		Assert.assertTrue(testTESS.getEinstiegStatistik("00:00", "24:00") instanceof KML);	
 	}
 
