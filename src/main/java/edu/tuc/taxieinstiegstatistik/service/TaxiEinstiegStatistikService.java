@@ -61,7 +61,7 @@ public class TaxiEinstiegStatistikService {
         //Verbinden der <Placemark><Point><coordinates> Folge mit
         //der aeusseren XML-Struktur und dem root Element
         Folder folder = new Folder();
-        folder.setName("Magnitude 5");
+        folder.setName("Taxi Einstieg Statistik");
         folder.setPlacemarks(placemarks);
 
         Document document = new Document();
